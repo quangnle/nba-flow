@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Flow Diagram</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        .node {
+            cursor: move;
+        }
+        .node-text {
+            pointer-events: none;
+            user-select: none;
+        }
+        .link {
+            fill: none;
+            stroke: #333;
+            stroke-width: 2px;
+            cursor: pointer;
+        }
+        .link:hover {
+            stroke: #0066cc;
+            stroke-width: 3px;
+        }
+        .node:hover {
+            filter: brightness(1.1);
+        }
+        .selected {
+            stroke: #0066cc;
+            stroke-width: 3px;
+        }
+        .nested-table {
+            margin-top: 8px;
+            margin-left: 16px;
+        }
+        .tab-btn {
+            transition: all 0.2s;
+        }
+        .tab-content {
+            display: flex;
+        }
+        #diagram-container {
+            overflow: hidden;
+        }
+        #diagram-svg {
+            display: block;
+        }
+        #info-panel-resizer {
+            user-select: none;
+            flex-shrink: 0;
+        }
+        #info-panel-resizer:active {
+            background-color: #0066cc;
+        }
+        #info-panel {
+            flex-shrink: 0;
+            transition: width 0.1s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="flex flex-col h-screen overflow-hidden">
+        <!-- Header with Tabs -->
+        <header class="bg-gray-800 text-white shadow-lg">
+            <div class="flex">
+                <button id="tab-diagram" class="tab-btn px-6 py-4 font-semibold bg-gray-700 border-b-2 border-blue-500">
+                    Diagram
+                </button>
+                <button id="tab-editor" class="tab-btn px-6 py-4 font-semibold hover:bg-gray-700">
+                    Editor
+                </button>
+            </div>
+        </header>
+
+        <!-- Tab Content -->
+        <div class="flex-1 flex overflow-hidden">
+            <!-- Diagram Tab Content -->
+            <div id="diagram-tab" class="tab-content flex-1 flex overflow-hidden">
+                <!-- Main Diagram Area -->
+                <div id="diagram-container" class="flex-1 relative bg-white">
+                    <svg id="diagram-svg" class="w-full h-full" width="100%" height="100%"></svg>
+                </div>
+
+                <!-- Resizer -->
+                <div id="info-panel-resizer" class="w-1 bg-gray-300 hover:bg-blue-500 cursor-col-resize transition-colors"></div>
+
+                <!-- Info Panel -->
+                <div id="info-panel" class="bg-white border-l border-gray-300 shadow-lg flex flex-col" style="width: 384px; min-width: 200px; max-width: 80%;">
+                    <div class="bg-gray-800 text-white p-4 flex justify-between items-center">
+                        <h2 class="font-bold text-lg">Info Panel</h2>
+                        <button id="toggle-panel" class="text-white hover:text-gray-300">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="info-content" class="flex-1 overflow-y-auto p-4">
+                        <p class="text-gray-500">Click on a node or link to view details</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Editor Tab Content -->
+            <div id="editor-tab" class="tab-content hidden flex-1 overflow-hidden">
+                <!-- CRUD Panel -->
+                <div id="crud-panel" class="w-full bg-white flex flex-col">
+                    <div class="bg-gray-800 text-white p-4 flex justify-between items-center">
+                        <h2 class="font-bold text-lg">CRUD Editor</h2>
+                    </div>
+                    <div class="p-4 border-b">
+                        <button id="add-node-btn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mr-2">
+                            Add Node
+                        </button>
+                        <button id="add-link-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                            Add Link
+                        </button>
+                    </div>
+                    <div id="crud-content" class="flex-1 overflow-y-auto p-4">
+                        <!-- CRUD content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
+

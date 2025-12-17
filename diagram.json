@@ -1,0 +1,245 @@
+{
+  "nodes": [
+    {
+      "node_name": "Farm Contract",
+      "node_type": "contract",
+      "x": 271,
+      "y": 142,
+      "addresses": [
+        {
+          "address": "0x1234567890abcdef1234567890abcdef12345678",
+          "pairs": [
+            {
+              "name": "ETH/USDT",
+              "inAmount": "1000",
+              "outAmount": "2500000"
+            },
+            {
+              "name": "BTC/ETH",
+              "inAmount": "10",
+              "outAmount": "200"
+            }
+          ]
+        },
+        {
+          "address": "0x1234567890abcdef1234567890abcdef12345678",
+          "pairs": [
+            {
+              "name": "ETH/USDT",
+              "inAmount": "1000",
+              "outAmount": "2500000"
+            },
+            {
+              "name": "BTC/ETH",
+              "inAmount": "10",
+              "outAmount": "200"
+            }
+          ]
+        },
+        {
+          "address": "0x1234567890abcdef1234567890abcdef12345678",
+          "pairs": [
+            {
+              "name": "ETH/USDT",
+              "inAmount": "1000",
+              "outAmount": "2500000"
+            },
+            {
+              "name": "BTC/ETH",
+              "inAmount": "10",
+              "outAmount": "200"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "node_name": "Strategies",
+      "node_type": "contract",
+      "addresses": [
+        {
+          "address": "0xabcdef1234567890abcdef1234567890abcdef12",
+          "pairs": [
+            {
+              "name": "USDC/USDT",
+              "inAmount": "5000",
+              "outAmount": "5000"
+            }
+          ]
+        }
+      ],
+      "x": 696,
+      "y": 148
+    },
+    {
+      "node_name": "Pool",
+      "node_type": "address",
+      "addresses": [
+        {
+          "address": "0x9876543210fedcba9876543210fedcba98765432",
+          "pairs": []
+        }
+      ],
+      "x": 1293.151123046875,
+      "y": 151.1414794921875
+    },
+    {
+      "node_name": "User",
+      "node_type": "address",
+      "addresses": [
+        {
+          "address": "0x1111111111111111111111111111111111111111",
+          "pairs": []
+        }
+      ],
+      "x": 272.51922607421875,
+      "y": 544.6634521484375
+    },
+    {
+      "node_name": "SDB",
+      "node_type": "address",
+      "addresses": [
+        {
+          "address": "0x2222222222222222222222222222222222222222",
+          "pairs": []
+        }
+      ],
+      "x": 701.81591796875,
+      "y": 473.114013671875
+    },
+    {
+      "node_name": "FundManager or FeeCollector",
+      "node_type": "contract",
+      "addresses": [
+        {
+          "address": "0x3333333333333333333333333333333333333333",
+          "pairs": [
+            {
+              "name": "FEE/USDT",
+              "inAmount": "100",
+              "outAmount": "100"
+            }
+          ]
+        }
+      ],
+      "x": 1306.8297119140625,
+      "y": 476.2705993652344
+    },
+    {
+      "node_name": "DoIt",
+      "node_type": "address",
+      "addresses": [
+        {
+          "address": "0x4444444444444444444444444444444444444444",
+          "pairs": []
+        }
+      ],
+      "x": 715.4945068359375,
+      "y": 630.9436645507812
+    },
+    {
+      "node_name": "NBA success fee",
+      "node_type": "address",
+      "addresses": [
+        {
+          "address": "0x5555555555555555555555555555555555555555",
+          "pairs": []
+        }
+      ],
+      "x": 709.1813354492188,
+      "y": 320.5453186035156
+    },
+    {
+      "node_name": "X",
+      "node_type": "address",
+      "addresses": [
+        {
+          "address": "0x6666666666666666666666666666666666666666",
+          "pairs": []
+        }
+      ],
+      "x": 688.1373901367188,
+      "y": 745.6332397460938
+    }
+  ],
+  "links": [
+    {
+      "name": "User_Farm Contract",
+      "from": "User",
+      "to": "Farm Contract",
+      "description": "User interacts with Farm Contract"
+    },
+    {
+      "name": "Farm Contract_Strategies",
+      "from": "Farm Contract",
+      "to": "Strategies",
+      "description": "Farm Contract engages Strategies"
+    },
+    {
+      "name": "Strategies_Pool",
+      "from": "Strategies",
+      "to": "Pool",
+      "description": "Strategies interact with Pool (bidirectional)"
+    },
+    {
+      "name": "Pool_Strategies",
+      "from": "Pool",
+      "to": "Strategies",
+      "description": "Pool interacts with Strategies (bidirectional)"
+    },
+    {
+      "name": "Strategies_FundManager or FeeCollector",
+      "from": "Strategies",
+      "to": "FundManager or FeeCollector",
+      "description": "Strategies feed into FundManager or FeeCollector"
+    },
+    {
+      "name": "FundManager or FeeCollector_SDB",
+      "from": "FundManager or FeeCollector",
+      "to": "SDB",
+      "description": "FundManager sends flow to SDB"
+    },
+    {
+      "name": "SDB_User",
+      "from": "SDB",
+      "to": "User",
+      "description": "SDB returns to User"
+    },
+    {
+      "name": "FundManager or FeeCollector_DoIt",
+      "from": "FundManager or FeeCollector",
+      "to": "DoIt",
+      "description": "FundManager sends flow to DoIt"
+    },
+    {
+      "name": "DoIt_User",
+      "from": "DoIt",
+      "to": "User",
+      "description": "DoIt returns to User"
+    },
+    {
+      "name": "FundManager or FeeCollector_NBA success fee",
+      "from": "FundManager or FeeCollector",
+      "to": "NBA success fee",
+      "description": "FundManager sends flow to NBA success fee"
+    },
+    {
+      "name": "NBA success fee_User",
+      "from": "NBA success fee",
+      "to": "User",
+      "description": "NBA success fee returns to User"
+    },
+    {
+      "name": "FundManager or FeeCollector_X",
+      "from": "FundManager or FeeCollector",
+      "to": "X",
+      "description": "FundManager sends flow to X"
+    },
+    {
+      "name": "X_User",
+      "from": "X",
+      "to": "User",
+      "description": "X returns to User"
+    }
+  ]
+}

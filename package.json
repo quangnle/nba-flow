@@ -1,0 +1,17 @@
+{
+  "name": "nba-flow",
+  "version": "1.0.0",
+  "description": "Diagram visualization with D3.js",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["diagram", "d3", "visualization"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
+
