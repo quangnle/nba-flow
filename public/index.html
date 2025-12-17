@@ -6,7 +6,25 @@
     <title>NBA Flow Diagram</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.4.1/papaparse.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+            --color-primary: #3b82f6;
+            --color-primary-dark: #2563eb;
+            --color-accent: #8b5cf6;
+            --gradient-header: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            --gradient-card: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+        }
+        
+        body {
+            font-family: var(--font-sans);
+        }
+        
         .node {
             cursor: move;
         }
@@ -37,12 +55,14 @@
         }
         .tab-btn {
             transition: all 0.2s;
+            font-family: var(--font-sans);
         }
         .tab-content {
             display: flex;
         }
         #diagram-container {
             overflow: hidden;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
         }
         #diagram-svg {
             display: block;
@@ -50,13 +70,62 @@
         #info-panel-resizer {
             user-select: none;
             flex-shrink: 0;
+            background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+        }
+        #info-panel-resizer:hover {
+            background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
         }
         #info-panel-resizer:active {
-            background-color: #0066cc;
+            background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
         }
         #info-panel {
             flex-shrink: 0;
             transition: width 0.1s ease-out;
+            background: var(--gradient-card);
+        }
+        
+        /* Header styling */
+        header {
+            background: var(--gradient-header) !important;
+        }
+        
+        /* Info Panel Header */
+        #info-panel > div:first-child {
+            background: var(--gradient-header) !important;
+        }
+        
+        /* Info Panel Content */
+        #info-content {
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        
+        /* Scrollbar styling */
+        #info-content::-webkit-scrollbar {
+            width: 8px;
+        }
+        #info-content::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        #info-content::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        #info-content::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .info-card {
+            animation: fadeIn 0.2s ease-out;
+        }
+        
+        .address-item {
+            animation: fadeIn 0.15s ease-out;
         }
     </style>
 </head>
@@ -70,6 +139,12 @@
                 </button>
                 <button id="tab-editor" class="tab-btn px-6 py-4 font-semibold hover:bg-gray-700">
                     Editor
+                </button>
+                <button id="tab-sheets" class="tab-btn px-6 py-4 font-semibold hover:bg-gray-700">
+                    Google Sheets
+                </button>
+                <button id="tab-search" class="tab-btn px-6 py-4 font-semibold hover:bg-gray-700">
+                    Address Search
                 </button>
             </div>
         </header>
@@ -121,6 +196,59 @@
                         <!-- CRUD content will be loaded here -->
                     </div>
                 </div>
+            </div>
+
+            <!-- Google Sheets Tab Content -->
+            <div id="sheets-tab" class="tab-content hidden flex-1 overflow-hidden flex flex-col bg-gray-50">
+                <div class="bg-gray-800 text-white p-4">
+                    <h2 class="font-bold text-lg mb-2">Report data</h2>
+                    <p class="text-sm text-gray-300">Access all shared reports</p>
+                </div>
+                
+                <!-- Sheets List -->
+                <div class="flex-1 overflow-y-auto p-4">
+                    <div id="sheets-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Sheets will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Address Search Tab Content -->
+            <div id="search-tab" class="tab-content hidden flex-1 overflow-hidden flex flex-col bg-gray-50">
+                <div class="bg-gray-800 text-white p-4">
+                    <h2 class="font-bold text-lg mb-2">Address Search</h2>
+                    <p class="text-sm text-gray-300">Search address to see which node it belongs to</p>
+                </div>
+
+                <!-- Search Input -->
+                <div class="p-4 border-b bg-white">
+                    <div class="flex gap-2">
+                        <input type="text" id="address-search-input" placeholder="Nhập address, node name, label, token..." class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="mt-2 text-sm text-gray-600">
+                        <span id="address-search-count">0 kết quả</span>
+                    </div>
+                </div>
+
+                <!-- Results -->
+                <div class="flex-1 overflow-y-auto p-4">
+                    <div id="address-search-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Results will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CSV Viewer Modal -->
+    <div id="csv-modal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; overflow-y: auto; padding: 20px;">
+        <div style="background: white; margin: auto; max-width: 90vw; max-height: 90vh; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #e5e7eb; flex-shrink: 0;">
+                <h2 id="csv-modal-title" style="margin: 0; font-size: 18px; font-weight: 600;"></h2>
+                <button id="csv-modal-close" style="background: none; border: none; cursor: pointer; font-size: 28px; color: #999; padding: 0; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">×</button>
+            </div>
+            <div id="csv-modal-content" style="flex: 1; padding: 20px; overflow: auto;">
+                <!-- CSV table will be inserted here -->
             </div>
         </div>
     </div>

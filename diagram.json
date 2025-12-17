@@ -3,124 +3,911 @@
     {
       "node_name": "Farm Contract",
       "node_type": "contract",
-      "x": 271,
-      "y": 142,
+      "x": 354,
+      "y": 123,
       "addresses": [
         {
-          "address": "0xD948db304F93d28B58d2CFb1dAA4Eafd193C6436"
+          "address": "0xD948db304F93d28B58d2CFb1dAA4Eafd193C6436",
+          "label": "Farm 1",
+          "network": "Arbitrum"
         },
         {
-          "address": "0xf4884A556bb766Fe78AB5A1f9C5A1Da3535C475D"
-        }        
+          "address": "0xf4884A556bb766Fe78AB5A1f9C5A1Da3535C475D",
+          "label": "Farm 2",
+          "network": "Arbitrum"
+        }
       ]
     },
     {
       "node_name": "Strategies",
       "node_type": "contract",
+      "x": 837,
+      "y": 117,
       "addresses": [
         {
-          "address": "0xabcdef1234567890abcdef1234567890abcdef12",
-          "pairs": [
-            {
-              "name": "USDC/USDT",
-              "inAmount": "5000",
-              "outAmount": "5000"
-            }
-          ]
+          "address": "0x272F5419512eEA13c41eA0277503Ba8aC97B2074",
+          "label": "Strategy 1",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x8ab1df8274ba5e4510c9f2465912a238b8034990",
+          "label": "Strategy 1",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x0ddaedf3967977dc25d48e27913763fa6aae3ecc",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xdabc537f4a8be304539156cc8bc68d8832006c76",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x45c1d60f238d3b0ecbf2dc15182dfc3c73c19891",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x1ee9ea290db47f4132ba5e10a9f6961aeac7a9dc",
+          "label": "Strategy 1",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x502036019a0cea81a43d25f9e4b19245224570bf",
+          "label": "Strategy 1",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x08ab5fae8f902ae8f4fa8393bfd5e9d5bed848da",
+          "label": "Strategy 1",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x9cd5bacfd24f9bb3b5c64411695343b6d09e37aa",
+          "label": "Strategy 1",
+          "token0": "USDC",
+          "token1": "USDT",
+          "pool": "USDC / USDT",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xcb56558bdabaafe65f5fdbd19405a4cb8908d863",
+          "label": "Strategy 1",
+          "token0": "USDC",
+          "token1": "USDT",
+          "pool": "USDC / USDT",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x441957d2d03e5bbff4ae69c7f8ab32e1eb4f227f",
+          "label": "Strategy 1",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x81ea5f437e2a57a2edd5e381d6ea5f1b12cec5ea",
+          "label": "Strategy 1",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x637489105294295c9c401fa092d64fa76e32edb3",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x8d3579486e838d2f93b36fd7780b04f477761e2b",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xdc9f4e430b9038d25977643faee059b4f9a686e6",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xa3d83e566cda41a9b7fdd35505ad9a849196a661",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x184da2350e942cdf37d75f9613ccd0e368adb8a0",
+          "label": "Strategy 1",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xbff0dfc191ce8cd3d8dca78eac3190d245afa268",
+          "label": "Strategy 1",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x379659ee9242a02171bb22413d3ad42cbf0ab203",
+          "label": "Strategy 1",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x4c177001ae2d1320dc5ddb21226b56829ad622dc",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x58182d61ec9afe76f6bf62a29ae68503e3e969db",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x62b926fD9dC4A302b24049D8A26E3D55E56B1002",
+          "label": "Strategy 1",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xab54e557af5bed65fbc930cd6017a7060d14f57a",
+          "label": "Strategy 2",
+          "token0": "USDC",
+          "token1": "USDT",
+          "pool": "USDC / USDT",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x3775ef9b61d43175bbfef3c14ca4bcde63c51481",
+          "label": "Strategy 2",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xd6e4f49ecb51e0b2e5bd234ec5f2d6564a0543d0",
+          "label": "Strategy 2",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xf9138736aaf658bfa2496ce4611663bc5a111785",
+          "label": "Strategy 2",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x17c5f5d0931c813425a6662c66fe987dfda6b65a",
+          "label": "Strategy 2",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x44480e7fd8c11c12a0eeeb4a4272a759f956c9cc",
+          "label": "Strategy 2",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x0b508748aa2bc8b77eb01499393b4c00a5df6af6",
+          "label": "Strategy 2",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x1a4117bb2fc742f50a41c84d79d451d892fb546c",
+          "label": "Strategy 2",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xaa58b9a907d332d56778a5df0998c000db647dc0",
+          "label": "Strategy 2",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x0b7c752970368ef064ec776df8bc7c57f7f960d1",
+          "label": "Strategy 2",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xd7e732a186abff0a4c01db7ba4a5f65a43a50f83",
+          "label": "Strategy 2",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xf8d3d1857c2b6e3033b93a151c09c6613d130b02",
+          "label": "Strategy 2",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xf5820ca6e9ad96c2095df9f7757edef053ccc961",
+          "label": "Strategy 2",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x67c2b298559e719707ab6ae976d2932f8ba56f87",
+          "label": "Strategy 2",
+          "token0": "USDC",
+          "token1": "USDT",
+          "pool": "USDC / USDT",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xc48871a088495a3112f400aa98ecce2c040d10f5",
+          "label": "Strategy 2",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x8ed6feea2307d5763fde121073054357ba9509a2",
+          "label": "Strategy 2",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x522967bfca7ddfd9afded90d00d9f352382eda8f",
+          "label": "Strategy 2",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x2fdadfc57a87995d2790e615b49fa7e3f14aa5b5",
+          "label": "Strategy 2",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x8c843322AFbDBd0b9A9E75Fa351d269FD1980aCD",
+          "label": "Strategy 2",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xf3B09f810132456b96E29eE1192258C5EaBB883E",
+          "label": "Strategy 2",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x1ae3d43938b190eff8555520e8f5146c47c526de",
+          "label": "Strategy 3",
+          "token0": "USDC",
+          "token1": "USDT",
+          "pool": "USDC / USDT",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x5cc1756bad35d38f0f42dcaaed2c3043dc232722",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x0789c15ae04e7329aa82f71f533dcb1b0f01dcf7",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x816606c223fcfca41417e5843ce5ad41ecb13818",
+          "label": "Strategy 3",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x38409651242333e752e3d425ecc9e2a24b97a35e",
+          "label": "Strategy 3",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xe56e0b5ce3633c6e994240312b1df7f46ab9ec97",
+          "label": "Strategy 3",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xb24ed57e6ea673244ce78bd722157c236dc4fa52",
+          "label": "Strategy 3",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x9d34df061d02e848cd5b4e5f3fa684a8c1d9ce94",
+          "label": "Strategy 3",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x2a55b8781b3e95c78a86a1094f45849490899b9e",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xb7b14253f6f6f8699b30d91f285f6cdafea365ab",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x49a2710778e04c070d0b59055613e0db40a03267",
+          "label": "Strategy 3",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x74ccfa447e4f0790c18b2f5591705c9dea2c0498",
+          "label": "Strategy 3",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x10d77238c59407393778a9198bbd81cc514f88e1",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x4da09dbe2c08743243b9b10bd4c78eb251ffb150",
+          "label": "Strategy 3",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xd9b867ab89665e089a3d883187e5e59e438a6c5b",
+          "label": "Strategy 3",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x52562f74da39e9ea1d124d9a69daa61d5ebc8796",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x25f092230fcef669f0a871a4627635450e64e7b4",
+          "label": "Strategy 3",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xd685f9e8a6c3079f894dc8c0dbe2e2dd041cd91b",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xfe4cb41aae7ff63fd2e1ca8c5fd9faf3d52f342c",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xbe3040e9d6f5229ad10d96df5a112e265611b198",
+          "label": "Strategy 3",
+          "token0": "USDC",
+          "token1": "USDT",
+          "pool": "USDC / USDT",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x7983984f7ee94e804c3324544c965125a226081f",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x8A8299621f4AA0D3928Fcf9A8681a8Ab59B61F99",
+          "label": "Strategy 3",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xa1586b5c2a808944395d33d750514d943430fb5a",
+          "label": "Strategy 4",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xc7a81ded3f1e15c14314c4e52fc682b88976fa41",
+          "label": "Strategy 4",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x9ad4f8621f4f38142b35ec8600965e5059f44d59",
+          "label": "Strategy 4",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xb54091216be9d59e4f75aef8bedf4f0be90d5d78",
+          "label": "Strategy 4",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xEa6Ea589F2Ac4685ef4661eC572dDFBdCC64f1bE",
+          "label": "Strategy 4",
+          "token0": "WETH",
+          "token1": "ARB",
+          "pool": "WETH / ARB",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x6d07be667f1c4d3201018e06d807547ead3ff75b",
+          "label": "Strategy 5",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "pool": "WETH / USDC.e",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xae8829aa874e434cfe00e1a77097598f6a6b19de",
+          "label": "Strategy 5",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x34acdd1002614e415e89b18936fc101fa713428e",
+          "label": "Strategy 6",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0xc9c41ae65084ea2ac58842815bc528ce6135fb10",
+          "label": "Strategy 6",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x7873e6c1d8d219af0b2e1860951969e73a459aa1",
+          "label": "Strategy 6",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0xe2e1c130c42d0af133d3bdf6a7a865664de482aa",
+          "label": "Strategy 6",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x7fc98aef2514acc90c45ce7dcf4f24c930624d67",
+          "label": "Strategy 6",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "pool": "ARB / USDC.e",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x6db48d2b127b857ddc3e3016a9507b3f91613a9b",
+          "label": "Strategy 6",
+          "token0": "USDC",
+          "token1": "WETH",
+          "pool": "USDC / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x87dcc2a80b15b65fa2fbcca1121ba52cebf1b4cb",
+          "label": "Strategy 6",
+          "token0": "ARB",
+          "token1": "WETH",
+          "pool": "ARB / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x9fbbb8752e8ddf6cfc4a7b57912b08fc6c3d1b96",
+          "label": "Strategy 6",
+          "token0": "USDC",
+          "token1": "WETH",
+          "pool": "USDC / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x30b95f08bda14492b9020327d6dcd1918dd90350",
+          "label": "Strategy 6",
+          "token0": "USDC",
+          "token1": "WETH",
+          "pool": "USDC / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x9ce4d15bebdb98ba78295c73015b2ae8b7864c89",
+          "label": "Strategy 6",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x594c538cd2a12e482cbcd4a543ad5fc2c6d0c369",
+          "label": "Strategy 6",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0xeee4a6e59705d41659aef942ddfd7f6a5b538af1",
+          "label": "Strategy 6",
+          "token0": "ARB",
+          "token1": "WETH",
+          "pool": "ARB / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x9235085f301a9d5b5263810b8c9245849a64e578",
+          "label": "Strategy 6",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x630e2927806eca194aea7c75d9873184024931dd",
+          "label": "Strategy 6",
+          "token0": "ARB",
+          "token1": "WETH",
+          "pool": "ARB / WETH",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x77e2026abc2077a4d830fecb34b7c8441df7d95b",
+          "label": "Strategy 6",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "pool": "WBTC / WETH",
+          "farm": "Farm 2"
         }
-      ],
-      "x": 696,
-      "y": 148
+      ]
     },
     {
       "node_name": "Pool",
       "node_type": "address",
+      "x": 1329,
+      "y": 105,
       "addresses": [
         {
-          "address": "0x9876543210fedcba9876543210fedcba98765432",
-          "pairs": []
+          "address": "0x2f5e87c9312fa29aed5c179e456625d79015299c",
+          "label": "WBTC / WETH",
+          "token0": "WBTC",
+          "token1": "WETH",
+          "fee": "0.05%"
+        },
+        {
+          "address": "0xcda53b1f66614552f834ceef361a8d12a0b8dad8",
+          "label": "ARB / USDC.e",
+          "token0": "ARB",
+          "token1": "USDC.e",
+          "fee": "0.05%"
+        },
+        {
+          "address": "0xc6f780497a95e246eb9449f5e4770916dcd6396a",
+          "label": "WETH / ARB",
+          "token0": "WETH",
+          "token1": "ARB",
+          "fee": "0.05%"
+        },
+        {
+          "address": "0xbe3ad6a5669dc0b8b12febc03608860c31e2eef6",
+          "label": "USDC / USDT",
+          "token0": "USDC",
+          "token1": "USDT",
+          "fee": "0.01%"
+        },
+        {
+          "address": "0xc31e54c7a869b9fcbecc14363cf510d1c41fa443",
+          "label": "WETH / USDC.e",
+          "token0": "WETH",
+          "token1": "USDC.e",
+          "fee": "0.05%"
         }
-      ],
-      "x": 1293.151123046875,
-      "y": 151.1414794921875
+      ]
     },
     {
       "node_name": "User",
       "node_type": "address",
-      "addresses": [
-        {
-          "address": "0x1111111111111111111111111111111111111111",
-          "pairs": []
-        }
-      ],
-      "x": 272.51922607421875,
-      "y": 544.6634521484375
+      "x": 333,
+      "y": 574,
+      "addresses": []
     },
     {
       "node_name": "SDB",
       "node_type": "address",
+      "x": 876,
+      "y": 527,
       "addresses": [
         {
-          "address": "0x2222222222222222222222222222222222222222",
-          "pairs": []
+          "address": "0x1a67e36f468fc3fea4aeb0a7a46ba01ab2fc09cd",
+          "label": "SDB1",
+          "description": "Success-based Distribution Bucket 1"
+        },
+        {
+          "address": "0xe19c9945d9d613ed39772538e9beca1ad409d471",
+          "label": "SDB2",
+          "description": "Success-based Distribution Bucket 2"
         }
-      ],
-      "x": 701.81591796875,
-      "y": 473.114013671875
+      ]
     },
     {
-      "node_name": "FundManager or FeeCollector",
+      "node_name": "FeeCollector",
       "node_type": "contract",
+      "x": 1447,
+      "y": 518,
       "addresses": [
         {
-          "address": "0x3333333333333333333333333333333333333333",
-          "pairs": [
-            {
-              "name": "FEE/USDT",
-              "inAmount": "100",
-              "outAmount": "100"
-            }
-          ]
+          "address": "0x5c957f5ad80d29b62a66c3a1fc50dba969ad39ed",
+          "label": "Fund Manager Farm 1",
+          "description": "interact with NBA",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xf560d6d308bee7951e46f7d350f8579a736c4dd3",
+          "label": "Fund Manager Farm 2",
+          "description": "interact with NBA",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x7503ae243d2399da637ae19b78c1ccddb4a556be",
+          "label": "Fee Collector"
+        },
+        {
+          "address": "0x0cdf828738d2a8e8a1a55355db1197f450f397c6",
+          "label": "Fee Collector"
+        },
+        {
+          "address": "0xec4fe6a0af65acf8c63721d6e9e8e63003f69555",
+          "label": "Fee Collector"
+        },
+        {
+          "address": "0x7f98ea842230014133521c596dcbb9d96c7ff186",
+          "label": "Fee Collector"
+        },
+        {
+          "address": "0x70f4dd3bae74b5581a18820acfff2845417c1d6d",
+          "label": "unclear",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0x9fb76181f826cbbe9e16223fef3a5a1e3149b6ac",
+          "label": "unclear",
+          "farm": "Farm 2"
+        },
+        {
+          "address": "0x0b0074d667e99679600d89192b12c597cdc3afd8",
+          "label": "unclear",
+          "farm": "Farm 1"
+        },
+        {
+          "address": "0xb742a477412f90463b8142d94f4322c1c0cecb53",
+          "label": "unclear",
+          "farm": "Farm 2"
         }
-      ],
-      "x": 1306.8297119140625,
-      "y": 476.2705993652344
+      ]
     },
     {
       "node_name": "DoIt",
       "node_type": "address",
+      "x": 888,
+      "y": 612,
       "addresses": [
         {
-          "address": "0x4444444444444444444444444444444444444444",
-          "pairs": []
+          "address": "0x99a373a3f236c9682fc6efc20171c315a8c16611",
+          "label": "DoIt1",
+          "description": "Operational Address 1"
+        },
+        {
+          "address": "0x66cf30483b6c27dfeec89ae22f44bda973c625cb",
+          "label": "DoIt2",
+          "description": "Operational Address 2"
         }
-      ],
-      "x": 715.4945068359375,
-      "y": 630.9436645507812
+      ]
     },
     {
       "node_name": "NBA success fee",
       "node_type": "address",
+      "x": 902,
+      "y": 356,
       "addresses": [
         {
-          "address": "0x5555555555555555555555555555555555555555",
-          "pairs": []
+          "address": "0xd0788b16c3536d2a1bc8b16834ee149e2acdb104",
+          "label": "NBA Success Fee",
+          "description": "Performance Fee Collection Address"
         }
-      ],
-      "x": 709.1813354492188,
-      "y": 320.5453186035156
+      ]
     },
     {
       "node_name": "X",
       "node_type": "address",
+      "x": 871,
+      "y": 710,
       "addresses": [
         {
-          "address": "0x6666666666666666666666666666666666666666",
-          "pairs": []
+          "address": "0x69f3ba775f9b99a0ff6f74d9bc8080e96b3a681d",
+          "type": "Fee Address"
+        },
+        {
+          "address": "0x9ba6d588b22576cf89ad095689c27cc132bd38d3",
+          "type": "Fee Address"
+        },
+        {
+          "address": "0xb5d77831d022ba53cbccbd23edcf2d9a89601b13",
+          "type": "Fee Address"
+        },
+        {
+          "address": "0x5f4d62c9e0b285a1f20d7ec4dbb5a195b4f75ec4",
+          "type": "Fee Address"
+        },
+        {
+          "address": "0x47034f93e6c579cd1f1046357ed22491d9e143dc",
+          "type": "Fee Address"
+        },
+        {
+          "address": "0x5a3b9fd7ce363e500a9bb242e0888be4fed8f11a",
+          "type": "Fee Address"
+        },
+        {
+          "address": "0x2b6c058dd1751658cfdc58c6c06c0b0a2421b234",
+          "type": "Fee Address"
+        },
+        {
+          "address": "0xc6547a970afc475469b1fa9efcacdf468d3aac28",
+          "type": "Fee Address"
         }
-      ],
-      "x": 688.1373901367188,
-      "y": 745.6332397460938
+      ]
     }
   ],
   "links": [
@@ -128,79 +915,109 @@
       "name": "User_Farm Contract",
       "from": "User",
       "to": "Farm Contract",
-      "description": "User interacts with Farm Contract"
+      "description": "[DEPOSIT] User calls deposit() (ETH) or depositLiquidity() (ERC-20). ETH is wrapped to WETH; ERC-20 requires approve() first. Farm forwards funds to Strategy. Returns Tracker Token to User as proof of share ownership."
     },
     {
       "name": "Farm Contract_Strategies",
       "from": "Farm Contract",
       "to": "Strategies",
-      "description": "Farm Contract engages Strategies"
+      "description": "[DEPOSIT → STRATEGY] Farm.deposit() calls Strategy.deposit(). Tokens held in Strategy are prepared for liquidity provision. Tracker Token is minted to represent user's share."
     },
     {
       "name": "Strategies_Pool",
       "from": "Strategies",
       "to": "Pool",
-      "description": "Strategies interact with Pool (bidirectional)"
+      "description": "[LIQUIDITY PROVISION] Strategy uses Zap to swap one token if needed to match token pair ratio. Strategy calls increaseLiquidity() on Uniswap V3 Pool. Liquidity position is created/updated. Excess tokens are refunded to User."
     },
     {
       "name": "Pool_Strategies",
       "from": "Pool",
       "to": "Strategies",
-      "description": "Pool interacts with Strategies (bidirectional)"
+      "description": "[TRADING FEES ACCUMULATION] Uniswap V3 Pool generates trading fees which accumulate in the position. Controller periodically calls Strategy.collectReward() to claim these fees back to Strategy contract."
     },
     {
-      "name": "Strategies_FundManager or FeeCollector",
+      "name": "Strategies_FeeCollector",
       "from": "Strategies",
-      "to": "FundManager or FeeCollector",
-      "description": "Strategies feed into FundManager or FeeCollector"
+      "to": "FeeCollector",
+      "description": "[PROFIT DISTRIBUTION - FEES TO COLLECTORS] Strategy.earnPrepare() swaps collected trading fees to WBTC. Management fees (in WBTC) are transferred to designated FeeCollector contracts: Farm 1 (0x5C957...), Farm 2 (0xF560d6...). Remaining profit stays in Strategy."
     },
     {
-      "name": "FundManager or FeeCollector_SDB",
-      "from": "FundManager or FeeCollector",
+      "name": "FeeCollector_SDB",
+      "from": "FeeCollector",
       "to": "SDB",
-      "description": "FundManager sends flow to SDB"
+      "description": "[ALLOCATE - SDB DISTRIBUTION] FeeCollector.allocate() distributes 27.4% of WBTC to Success-based Distribution Buckets: SDB1 (0x1A67E3..., 13.7%) + SDB2 (0xE19c99..., 13.7%). Total: 13.7% + 13.7% = 27.4%"
     },
     {
       "name": "SDB_User",
       "from": "SDB",
       "to": "User",
-      "description": "SDB returns to User"
+      "description": "[REWARD CLAIM] SDB addresses hold WBTC until User claims their success-based distribution rewards. User withdraws their portion of SDB allocations back to wallet."
     },
     {
-      "name": "FundManager or FeeCollector_DoIt",
-      "from": "FundManager or FeeCollector",
+      "name": "FeeCollector_DoIt",
+      "from": "FeeCollector",
       "to": "DoIt",
-      "description": "FundManager sends flow to DoIt"
+      "description": "[ALLOCATE - DOIT DISTRIBUTION] FeeCollector.allocate() distributes 13.2% of WBTC to Operational addresses: DoIt1 (0x99A373..., 6.6%) + DoIt2 (0x66cF30..., 6.6%). Total: 6.6% + 6.6% = 13.2%"
     },
     {
       "name": "DoIt_User",
       "from": "DoIt",
       "to": "User",
-      "description": "DoIt returns to User"
+      "description": "[OPERATIONAL PAYOUT] DoIt addresses accumulate operational fees. User or authorized party withdraws operational allocations to wallet as needed."
     },
     {
-      "name": "FundManager or FeeCollector_NBA success fee",
-      "from": "FundManager or FeeCollector",
+      "name": "FeeCollector_NBA success fee",
+      "from": "FeeCollector",
       "to": "NBA success fee",
-      "description": "FundManager sends flow to NBA success fee"
+      "description": "[ALLOCATE - NBA FEE DISTRIBUTION] FeeCollector.allocate() distributes 26.4% of WBTC to NBA Success Fee address (0xd0788b...). This is the performance-based fee allocation."
     },
     {
       "name": "NBA success fee_User",
       "from": "NBA success fee",
       "to": "User",
-      "description": "NBA success fee returns to User"
+      "description": "[PERFORMANCE FEE PAYOUT] NBA Success Fee address holds WBTC performance fees. Accumulated fees are distributed to authorized users/protocol as per agreement."
     },
     {
-      "name": "FundManager or FeeCollector_X",
-      "from": "FundManager or FeeCollector",
+      "name": "FeeCollector_Taiwan Fee",
+      "from": "FeeCollector",
       "to": "X",
-      "description": "FundManager sends flow to X"
+      "description": "[ALLOCATE - TAIWAN FEE DISTRIBUTION] FeeCollector.allocate() distributes 33% of WBTC to Taiwan Fee Collector (0x69F3BA...). This is the largest single allocation representing primary fee recipient share."
     },
     {
-      "name": "X_User",
+      "name": "Taiwan Fee_User",
       "from": "X",
       "to": "User",
-      "description": "X returns to User"
+      "description": "[PRIMARY RECIPIENT PAYOUT] Taiwan Fee Collector (primary address 0x69F3BA...) accumulates 33% WBTC allocation. These fees flow back to User or stakeholders as per protocol economics."
+    },
+    {
+      "name": "Strategies_Earn_User_Balance",
+      "from": "Strategies",
+      "to": "User",
+      "description": "[EARN - UPDATE SHARES] Strategy.earn() is called after earnPrepare(). Each User's reward balance is calculated based on their Tracker Token share percentage. Funds remain in Strategy (not transferred yet)."
+    },
+    {
+      "name": "Strategies_ClaimReward_User",
+      "from": "Strategies",
+      "to": "User",
+      "description": "[CLAIM REWARD] User calls claimReward() to withdraw their accumulated WBTC profits. Strategy transfers User's earned WBTC directly from Strategy contract to User's wallet."
+    },
+    {
+      "name": "User_Withdraw_Farm",
+      "from": "User",
+      "to": "Farm Contract",
+      "description": "[WITHDRAW] User first approves() Tracker Token burn. Then calls Farm.withdrawLiquidity() with amount of shares to redeem. Farm initiates withdrawal process in Strategy."
+    },
+    {
+      "name": "Farm_Withdraw_Strategy",
+      "from": "Farm Contract",
+      "to": "Strategies",
+      "description": "[WITHDRAW] Farm calls Strategy.withdraw(). Strategy verifies and burns User's Tracker Token. Calculates liquidity amount = user_shares × total_liquidity / total_shares. Updates internal share records."
+    },
+    {
+      "name": "Strategy_Liquidity_Pool",
+      "from": "Strategies",
+      "to": "Pool",
+      "description": "[COLLECT & REMOVE LIQUIDITY] Strategy calls collectReward() to claim any pending trading fees. Then calls decreaseLiquidity() to convert NFT position back to token pair (e.g., WBTC + WETH)."
     }
   ]
 }

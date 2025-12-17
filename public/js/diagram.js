@@ -411,5 +411,11 @@ export class DiagramManager {
     getData() {
         return this.data;
     }
+
+    updateData(newData) {
+        this.data = newData;
+        this.setupDrag();
+        this.render();
+    }
 }
 

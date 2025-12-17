@@ -1,10 +1,12 @@
 const express = require('express');
 const fs = require('fs').promises;
+const fssync = require('fs');
 const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'diagram.json');
+const DATA_DIR = path.join(__dirname, 'data');
 
 // Middleware
 app.use(express.json());
@@ -23,7 +25,7 @@ app.get('/api/diagram', async (req, res) => {
   }
 });
 
-// Save diagram data
+// Save diagram data (POST)
 app.post('/api/diagram', async (req, res) => {
   try {
     await fs.writeFile(DATA_FILE, JSON.stringify(req.body, null, 2), 'utf8');
@@ -34,8 +36,53 @@ app.post('/api/diagram', async (req, res) => {
   }
 });
 
+// Update diagram data (PUT)
+app.put('/api/diagram', async (req, res) => {
+  try {
+    await fs.writeFile(DATA_FILE, JSON.stringify(req.body, null, 2), 'utf8');
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error saving diagram data:', error);
+    res.status(500).json({ error: 'Failed to save diagram data' });
+  }
+});
+
+// Get data files list
+app.get('/api/data-files', async (req, res) => {
+  try {
+    if (!fssync.existsSync(DATA_DIR)) {
+      return res.json({ files: [] });
+    }
+    
+    const files = await fs.readdir(DATA_DIR);
+    const csvFiles = files.filter(f => f.endsWith('.csv'));
+    res.json({ files: csvFiles.sort() });
+  } catch (error) {
+    console.error('Error reading data files:', error);
+    res.status(500).json({ error: 'Failed to read data files' });
+  }
+});
+
+// Serve data files
+app.use('/data', express.static(DATA_DIR, {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.csv')) {
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    }
+  }
+}));
+
 // Static files - Must be after API routes
 app.use(express.static('public'));
+
+// Serve CSV and other files from root directory
+app.use(express.static('.', { 
+  setHeaders: (res, path) => {
+    if (path.endsWith('.csv')) {
+      res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+    }
+  }
+}));
 
 // Serve main HTML - Catch-all route for SPA (exclude API routes)
 app.get('*', (req, res, next) => {
