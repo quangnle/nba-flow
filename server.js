@@ -8,21 +8,18 @@ const DATA_FILE = path.join(__dirname, 'diagram.json');
 
 // Middleware
 app.use(express.json());
-app.use(express.static('public'));
 
-// Serve main HTML
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
+// API Routes - Must be defined BEFORE static middleware
 // Get diagram data
 app.get('/api/diagram', async (req, res) => {
   try {
+    console.log('GET /api/diagram - Reading file:', DATA_FILE);
     const data = await fs.readFile(DATA_FILE, 'utf8');
+    console.log('GET /api/diagram - Success');
     res.json(JSON.parse(data));
   } catch (error) {
     console.error('Error reading diagram data:', error);
-    res.status(500).json({ error: 'Failed to read diagram data' });
+    res.status(500).json({ error: 'Failed to read diagram data', details: error.message });
   }
 });
 
@@ -37,7 +34,20 @@ app.post('/api/diagram', async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+// Static files - Must be after API routes
+app.use(express.static('public'));
+
+// Serve main HTML - Catch-all route for SPA (exclude API routes)
+app.get('*', (req, res, next) => {
+  // Skip API routes
+  if (req.path.startsWith('/api/')) {
+    return next();
+  }
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+  console.log(`Data file path: ${DATA_FILE}`);
 });
 
