@@ -7,50 +7,11 @@
       "y": 142,
       "addresses": [
         {
-          "address": "0x1234567890abcdef1234567890abcdef12345678",
-          "pairs": [
-            {
-              "name": "ETH/USDT",
-              "inAmount": "1000",
-              "outAmount": "2500000"
-            },
-            {
-              "name": "BTC/ETH",
-              "inAmount": "10",
-              "outAmount": "200"
-            }
-          ]
+          "address": "0xD948db304F93d28B58d2CFb1dAA4Eafd193C6436"
         },
         {
-          "address": "0x1234567890abcdef1234567890abcdef12345678",
-          "pairs": [
-            {
-              "name": "ETH/USDT",
-              "inAmount": "1000",
-              "outAmount": "2500000"
-            },
-            {
-              "name": "BTC/ETH",
-              "inAmount": "10",
-              "outAmount": "200"
-            }
-          ]
-        },
-        {
-          "address": "0x1234567890abcdef1234567890abcdef12345678",
-          "pairs": [
-            {
-              "name": "ETH/USDT",
-              "inAmount": "1000",
-              "outAmount": "2500000"
-            },
-            {
-              "name": "BTC/ETH",
-              "inAmount": "10",
-              "outAmount": "200"
-            }
-          ]
-        }
+          "address": "0xf4884A556bb766Fe78AB5A1f9C5A1Da3535C475D"
+        }        
       ]
     },
     {
