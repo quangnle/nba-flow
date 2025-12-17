@@ -13,20 +13,32 @@ class App {
 
     async init() {
         // Load diagram data
-        const response = await fetch('/api/diagram');
-        const data = await response.json();
-        
-        // Initialize components
-        this.diagramManager.init(data, (item, type) => {
-            this.infoPanel.show(item, type);
-            this.showInfoPanel();
-        });
-        
-        this.infoPanel.init();
-        this.crudPanel.init();
-        
-        // Setup UI controls
-        this.setupControls();
+        try {
+            const response = await fetch('/api/diagram');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Response is not JSON');
+            }
+            const data = await response.json();
+            
+            // Initialize components
+            this.diagramManager.init(data, (item, type) => {
+                this.infoPanel.show(item, type);
+                this.showInfoPanel();
+            });
+            
+            this.infoPanel.init();
+            this.crudPanel.init();
+            
+            // Setup UI controls
+            this.setupControls();
+        } catch (error) {
+            console.error('Error initializing app:', error);
+            alert('Error loading diagram data. Please refresh the page.');
+        }
     }
 
     setupControls() {

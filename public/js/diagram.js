@@ -371,21 +371,41 @@ export class DiagramManager {
 
     async savePositions() {
         try {
-            await fetch('/api/diagram', {
+            const response = await fetch('/api/diagram', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(this.data)
             });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Response is not JSON');
+            }
+            await response.json();
         } catch (error) {
             console.error('Error saving positions:', error);
         }
     }
 
     async refresh() {
-        const response = await fetch('/api/diagram');
-        this.data = await response.json();
-        this.setupDrag();
-        this.render();
+        try {
+            const response = await fetch('/api/diagram');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Response is not JSON');
+            }
+            this.data = await response.json();
+            this.setupDrag();
+            this.render();
+        } catch (error) {
+            console.error('Error refreshing diagram:', error);
+            alert('Error loading diagram data. Please refresh the page.');
+        }
     }
 
     getData() {

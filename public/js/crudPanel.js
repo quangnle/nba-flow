@@ -420,11 +420,19 @@ export class CrudPanel {
 
     async saveData(data) {
         try {
-            await fetch('/api/diagram', {
+            const response = await fetch('/api/diagram', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Response is not JSON');
+            }
+            await response.json();
             // Refresh diagram after saving
             this.diagramManager.refresh();
         } catch (error) {
