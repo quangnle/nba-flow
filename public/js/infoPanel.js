@@ -12,7 +12,7 @@ export class InfoPanel {
         this.selectedAddressIdx = null;
         this.onSaveCallback = null;
         this.allResources = [];
-        
+
         // Bind methods to preserve reference for event listeners
         this.handleResize = this.handleResize.bind(this);
         this.stopResize = this.stopResize.bind(this);
@@ -23,19 +23,19 @@ export class InfoPanel {
         this.panelElement = document.getElementById('info-panel');
         this.resizerElement = document.getElementById('info-panel-resizer');
         this.onSaveCallback = onSaveCallback;
-        
+
         // Load saved width from localStorage
         const savedWidth = localStorage.getItem('infoPanelWidth');
         if (savedWidth && this.panelElement) {
             this.panelElement.style.width = savedWidth + 'px';
         }
-        
+
         // Setup resize functionality
         this.setupResize();
-        
+
         // Load resources data
         this.loadResources();
-        
+
         // Inject custom styles
         this.injectStyles();
     }
@@ -56,7 +56,7 @@ export class InfoPanel {
 
     injectStyles() {
         if (document.getElementById('info-panel-styles')) return;
-        
+
         const styles = document.createElement('style');
         styles.id = 'info-panel-styles';
         styles.textContent = `
@@ -622,38 +622,38 @@ export class InfoPanel {
             this.isResizing = true;
             this.startX = e.clientX;
             this.startWidth = this.panelElement.offsetWidth;
-            
+
             document.addEventListener('mousemove', this.handleResize);
             document.addEventListener('mouseup', this.stopResize);
-            
+
             e.preventDefault();
         });
     }
 
     handleResize(e) {
         if (!this.isResizing || !this.panelElement) return;
-        
+
         const diff = this.startX - e.clientX;
         const newWidth = this.startWidth + diff;
-        
+
         const container = this.panelElement.parentElement;
         const containerWidth = container.offsetWidth;
         const minWidth = 200;
         const maxWidth = containerWidth * 0.8;
-        
+
         const constrainedWidth = Math.max(minWidth, Math.min(maxWidth, newWidth));
-        
+
         this.panelElement.style.width = constrainedWidth + 'px';
     }
 
     stopResize() {
         if (this.isResizing) {
             this.isResizing = false;
-            
+
             if (this.panelElement) {
                 localStorage.setItem('infoPanelWidth', this.panelElement.offsetWidth);
             }
-            
+
             document.removeEventListener('mousemove', this.handleResize);
             document.removeEventListener('mouseup', this.stopResize);
         }
@@ -684,6 +684,61 @@ export class InfoPanel {
         return '';
     }
 
+    getPoolBadgeStyle(label) {
+        if (!label) return 'background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0;';
+
+        const l = label.toLowerCase();
+        if (l.includes('wbtc') && l.includes('weth')) {
+            return 'background: #fef3c7; color: #92400e; border: 1px solid #fcd34d;'; // Orange/Amber
+        }
+        if (l.includes('arb') && (l.includes('usdc') || l.includes('usdce'))) {
+            return 'background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd;'; // Blue
+        }
+        if (l.includes('weth') && l.includes('arb')) {
+            return 'background: #dcfce7; color: #166534; border: 1px solid #86efac;'; // Green
+        }
+        if (l.includes('usdc') && l.includes('usdt')) {
+            return 'background: #fce7f3; color: #9d174d; border: 1px solid #f9a8d4;'; // Pink
+        }
+        if (l.includes('weth') && (l.includes('usdc') || l.includes('usdce'))) {
+            return 'background: #e0e7ff; color: #3730a3; border: 1px solid #a5b4fc;'; // Indigo
+        }
+
+        return 'background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0;'; // Default light gray
+    }
+
+    getLabelBadgeStyle(label) {
+        if (!label) return 'background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0;';
+
+        const l = label.toLowerCase();
+        // Check if it's a Strategy label
+        if (l.includes('strategy')) return null; // Use default strategy badge class
+
+        // Fund Manager - Teal color
+        if (l.includes('fund manager')) {
+            return 'background: #ccfbf1; color: #0f766e; border: 1px solid #5eead4;';
+        }
+
+        // Fee Collector - Violet color
+        if (l.includes('fee collector')) {
+            return 'background: #ede9fe; color: #6d28d9; border: 1px solid #c4b5fd;';
+        }
+
+        // Unknown/discontinued - Gray color
+        if (l.includes('unknown') || l.includes('discontinued')) {
+            return 'background: #f1f5f9; color: #64748b; border: 1px solid #cbd5e1;';
+        }
+
+        // Check if it's a Pool label
+        if (l.includes('wbtc') || l.includes('weth') || l.includes('arb') ||
+            l.includes('usdc') || l.includes('usdt')) {
+            return this.getPoolBadgeStyle(label);
+        }
+
+        // Default light style for other labels
+        return 'background: #f8fafc; color: #64748b; border: 1px solid #e2e8f0;';
+    }
+
     show(item, type) {
         if (!this.contentElement) return;
 
@@ -702,7 +757,7 @@ export class InfoPanel {
     showNodeWithTabs(node) {
         // Reset selected address when showing tabs
         this.selectedAddressIdx = null;
-        
+
         let html = `
             <div class="panel-tabs">
                 <button class="panel-tab active" data-tab="view">
@@ -722,7 +777,7 @@ export class InfoPanel {
             <div id="tab-view-content">${this.renderNodeView(node)}</div>
             <div id="tab-edit-content" style="display: none;">${this.renderNodeEdit(node)}</div>
         `;
-        
+
         this.contentElement.innerHTML = html;
         this.setupTabSwitching();
         this.setupSearch(node.addresses);
@@ -748,7 +803,7 @@ export class InfoPanel {
             <div id="tab-view-content">${this.renderLinkView(link)}</div>
             <div id="tab-edit-content" style="display: none;">${this.renderLinkEdit(link)}</div>
         `;
-        
+
         this.contentElement.innerHTML = html;
         this.setupTabSwitching();
     }
@@ -757,16 +812,16 @@ export class InfoPanel {
         const tabs = this.contentElement.querySelectorAll('.panel-tab');
         const viewContent = document.getElementById('tab-view-content');
         const editContent = document.getElementById('tab-edit-content');
-        
+
         tabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 tabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
-                
+
                 // Hide all tabs first
                 viewContent.style.display = 'none';
                 editContent.style.display = 'none';
-                
+
                 if (tab.dataset.tab === 'view') {
                     viewContent.style.display = 'block';
                 } else if (tab.dataset.tab === 'edit') {
@@ -779,7 +834,7 @@ export class InfoPanel {
 
     renderNodeView(node) {
         const nodeTypeClass = node.node_type === 'contract' ? 'type-contract' : 'type-address';
-        
+
         let html = `
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-3">
@@ -796,7 +851,7 @@ export class InfoPanel {
                         <span class="stat-label">Total Addresses</span>
                     </div>
             `;
-            
+
             if (node.node_name === 'Strategies') {
                 const uniquePools = new Set(node.addresses.map(a => a.pool).filter(Boolean));
                 const uniqueFarms = new Set(node.addresses.map(a => a.farm).filter(Boolean));
@@ -811,7 +866,7 @@ export class InfoPanel {
                     </div>
                 `;
             }
-            
+
             html += `</div>`;
 
             html += `
@@ -823,7 +878,7 @@ export class InfoPanel {
                 </div>
             `;
 
-                html += `
+            html += `
                 <div class="info-card">
                     <div class="info-card-header">
                         <span class="text-sm font-semibold text-gray-700">Addresses</span>
@@ -836,12 +891,12 @@ export class InfoPanel {
                 html += this.renderAddressItem(address, idx);
             });
 
-                    html += `
+            html += `
                     </div>
                 </div>
             `;
         } else {
-                        html += `
+            html += `
                 <div class="info-card">
                     <div class="info-card-body p-6 text-center text-gray-500">
                         <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -862,7 +917,7 @@ export class InfoPanel {
         if (this.selectedAddressIdx === null) {
             return this.renderAddressSelectionView(node);
         }
-        
+
         // Show edit form for selected address
         return this.renderSelectedAddressEditForm(node);
     }
@@ -895,7 +950,7 @@ export class InfoPanel {
             html += `<p class="text-sm text-gray-500 text-center py-8">No addresses available</p>`;
         }
 
-                    html += `
+        html += `
                                 </div>
                 </div>
 
@@ -933,21 +988,27 @@ export class InfoPanel {
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-2 flex-wrap">
         `;
-        
+
         if (addr.label) {
             const strategyClass = this.getStrategyBadgeClass(addr.label);
             if (strategyClass) {
                 html += `<span class="strategy-badge ${strategyClass}">${addr.label}</span>`;
             } else {
-                html += `<span class="text-sm font-medium text-gray-700">${addr.label}</span>`;
+                const labelStyle = this.getLabelBadgeStyle(addr.label);
+                html += `<span class="strategy-badge" style="${labelStyle}">${addr.label}</span>`;
             }
         }
-        
+
         if (addr.farm) {
             const farmClass = this.getFarmBadgeClass(addr.farm);
             html += `<span class="farm-badge ${farmClass}">${addr.farm}</span>`;
         }
-        
+
+        if (addr.strategy) {
+            const stratClass = this.getStrategyBadgeClass(addr.strategy);
+            html += `<span class="strategy-badge ${stratClass}">${addr.strategy}</span>`;
+        }
+
         if (addr.pool || (addr.token0 && addr.token1)) {
             const t0 = addr.token0 || '';
             const t1 = addr.token1 || '';
@@ -959,7 +1020,7 @@ export class InfoPanel {
                 </div>
             `;
         }
-        
+
         html += `
                         </div>
                         <div class="address-text" style="margin-top: 8px;">${addr.address}</div>
@@ -972,13 +1033,13 @@ export class InfoPanel {
                 </div>
             </div>
         `;
-        
+
         return html;
     }
 
     renderSelectedAddressEditForm(node) {
         const addr = node.addresses[this.selectedAddressIdx];
-        
+
         let html = `
             <div class="edit-form">
                 <div class="info-card">
@@ -1130,7 +1191,7 @@ export class InfoPanel {
     }
 
     renderNodeResources(node) {
-        const relatedResources = this.allResources.filter(r => 
+        const relatedResources = this.allResources.filter(r =>
             r.relatedNodes.includes(node.node_name)
         );
 
@@ -1164,7 +1225,7 @@ export class InfoPanel {
     }
 
     renderLinkResources(link) {
-        const relatedResources = this.allResources.filter(r => 
+        const relatedResources = this.allResources.filter(r =>
             r.relatedLinks.includes(link.name)
         );
 
@@ -1214,9 +1275,9 @@ export class InfoPanel {
                             <span class="text-xs font-semibold text-gray-700">Files:</span>
                             <div class="space-y-2 mt-2">
                                 ${resource.files.map(f => {
-                                    const isCSV = f.file.endsWith('.csv');
-                                    return isCSV 
-                                        ? `
+            const isCSV = f.file.endsWith('.csv');
+            return isCSV
+                ? `
                                             <div class="flex items-center gap-2">
                                                 <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -1226,7 +1287,7 @@ export class InfoPanel {
                                                 </button>
                                             </div>
                                         `
-                                        : `
+                : `
                                             <div class="flex items-center gap-2">
                                                 <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
@@ -1236,7 +1297,7 @@ export class InfoPanel {
                                                 </a>
                                             </div>
                                         `;
-                                }).join('')}
+        }).join('')}
                             </div>
                         </div>
                         
@@ -1251,7 +1312,7 @@ export class InfoPanel {
                     </div>
                 </div>
             `;
-        }
+    }
 
     setupResourcesTab() {
         const searchInput = document.getElementById('resources-search-input');
@@ -1266,7 +1327,7 @@ export class InfoPanel {
                 const tags = (card.dataset.tags || '').toLowerCase();
                 const text = card.textContent.toLowerCase();
 
-                const matches = !query || 
+                const matches = !query ||
                     category.includes(query) ||
                     tags.includes(query) ||
                     text.includes(query);
@@ -1274,24 +1335,24 @@ export class InfoPanel {
                 card.style.display = matches ? '' : 'none';
             });
         });
-        
+
         // Setup CSV viewers
         this.setupCSVViewers();
     }
 
     setupCSVViewers() {
         const csvBtns = document.querySelectorAll('.csv-preview-btn');
-        
+
         csvBtns.forEach(btn => {
             btn.addEventListener('click', async () => {
                 const file = btn.dataset.file;
                 const name = btn.dataset.name;
-                
+
                 try {
                     // Fetch the CSV file - file path is like "NBA Auditing - gas_cost_per_strategy.csv"
                     // We need to fetch from root with proper escaping for spaces
                     let csvText;
-                    
+
                     try {
                         const response = await fetch(`./${file}`);
                         if (response.ok) {
@@ -1310,8 +1371,8 @@ export class InfoPanel {
                             return;
                         }
                     }
-                    
-                    
+
+
                     // Use PapaParse if available, otherwise use simple parser
                     let data;
                     if (typeof Papa !== 'undefined') {
@@ -1325,7 +1386,7 @@ export class InfoPanel {
                         // Simple fallback CSV parser
                         data = this.simpleCSVParser(csvText);
                     }
-                    
+
                     this.showCSVModal(data, name);
                 } catch (error) {
                     console.error('Error loading CSV:', error);
@@ -1344,18 +1405,18 @@ export class InfoPanel {
     simpleCSVParser(csvText) {
         const rows = [];
         const lines = csvText.split('\n');
-        
+
         for (let line of lines) {
             if (!line.trim()) continue;
-            
+
             const row = [];
             let current = '';
             let inQuotes = false;
-            
+
             for (let i = 0; i < line.length; i++) {
                 const char = line[i];
                 const nextChar = line[i + 1];
-                
+
                 if (char === '"') {
                     if (inQuotes && nextChar === '"') {
                         current += '"';
@@ -1371,10 +1432,10 @@ export class InfoPanel {
                 }
             }
             row.push(current.trim());
-            
+
             rows.push(row);
         }
-        
+
         return rows;
     }
 
@@ -1383,28 +1444,28 @@ export class InfoPanel {
         const title = document.getElementById('csv-modal-title');
         const content = document.getElementById('csv-modal-content');
         const closeBtn = document.getElementById('csv-modal-close');
-        
+
         title.textContent = name;
-        
+
         // Build table
         let html = `<div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse; font-size: 12px; font-family: 'Courier New', monospace;">
                 <thead>
                     <tr style="background: linear-gradient(to right, #1e293b, #334155); color: white; position: sticky; top: 0; z-index: 10;">`;
-        
+
         // Header row
         if (data.length > 0) {
             data[0].forEach((cell, idx) => {
                 html += `<th style="padding: 12px; text-align: left; font-weight: 600; border-right: 1px solid #cbd5e1; min-width: 140px; white-space: nowrap;">${this.escapeHtml(cell || '')}</th>`;
             });
         }
-        
+
         html += `</tr></thead><tbody>`;
-        
+
         // Data rows
         for (let i = 1; i < data.length; i++) {
             if (!data[i].some(cell => cell !== '')) continue; // Skip empty rows
-            
+
             html += `<tr style="border-bottom: 1px solid #e5e7eb;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background=''">`;
             data[i].forEach((cell, idx) => {
                 const isNumber = !isNaN(parseFloat(cell)) && cell !== '';
@@ -1413,16 +1474,16 @@ export class InfoPanel {
             });
             html += `</tr>`;
         }
-        
+
         html += `</tbody></table></div>`;
         content.innerHTML = html;
-        
+
         modal.style.display = 'flex';
-        
+
         closeBtn.onclick = () => {
             modal.style.display = 'none';
         };
-        
+
         modal.onclick = (e) => {
             if (e.target === modal) {
                 modal.style.display = 'none';
@@ -1521,7 +1582,7 @@ export class InfoPanel {
         if (saveLinkBtn) {
             saveLinkBtn.addEventListener('click', () => this.saveLinkChanges());
         }
-        
+
         // For Node editing - check if we're in selection view or edit view
         const selectionItems = this.contentElement.querySelectorAll('.address-selection-item');
         const backToSelectionBtn = document.getElementById('back-to-selection-btn');
@@ -1532,12 +1593,12 @@ export class InfoPanel {
         const delAddressBtn = document.getElementById('del-address-btn');
         const cancelBtn = document.getElementById('cancel-edit-btn');
         const searchInput = document.getElementById('selection-search-input');
-        
+
         // Setup search in selection view
         if (searchInput) {
             this.setupSelectionSearch();
         }
-        
+
         // Selection view - click on item to select it
         selectionItems.forEach(item => {
             item.addEventListener('click', () => {
@@ -1552,7 +1613,7 @@ export class InfoPanel {
                 }
             });
         });
-        
+
         // Back to selection button
         if (backToSelectionBtn) {
             backToSelectionBtn.addEventListener('click', () => {
@@ -1565,12 +1626,12 @@ export class InfoPanel {
                 }
             });
         }
-        
+
         // Save selected address
         if (saveAddressBtn) {
             saveAddressBtn.addEventListener('click', () => this.saveSelectedAddress());
         }
-        
+
         // Cancel address edit
         if (cancelAddressEditBtn) {
             cancelAddressEditBtn.addEventListener('click', () => {
@@ -1580,22 +1641,22 @@ export class InfoPanel {
                 this.setupEditForm();
             });
         }
-        
+
         // Duplicate selected address
         if (dupAddressBtn) {
             dupAddressBtn.addEventListener('click', () => this.duplicateSelectedAddress());
         }
-        
+
         // Delete selected address
         if (delAddressBtn) {
             delAddressBtn.addEventListener('click', () => this.deleteSelectedAddress());
         }
-        
+
         // Add new address button
         if (addAddressBtn) {
             addAddressBtn.addEventListener('click', () => this.addNewAddressItem());
         }
-        
+
         // Cancel back to view
         if (cancelBtn) {
             cancelBtn.addEventListener('click', () => {
@@ -1610,14 +1671,14 @@ export class InfoPanel {
         const searchInput = document.getElementById('selection-search-input');
         const countDisplay = document.getElementById('selection-count');
         const container = document.getElementById('selection-items-container');
-        
+
         if (!searchInput || !container) return;
-        
+
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             const items = container.querySelectorAll('.address-selection-item');
             let visibleCount = 0;
-            
+
             items.forEach(item => {
                 const address = (item.dataset.address || '').toLowerCase();
                 const label = (item.dataset.label || '').toLowerCase();
@@ -1625,21 +1686,21 @@ export class InfoPanel {
                 const token1 = (item.dataset.token1 || '').toLowerCase();
                 const pool = (item.dataset.pool || '').toLowerCase();
                 const farm = (item.dataset.farm || '').toLowerCase();
-                
-                const matches = !query || 
+
+                const matches = !query ||
                     address.includes(query) ||
                     label.includes(query) ||
                     token0.includes(query) ||
                     token1.includes(query) ||
                     pool.includes(query) ||
                     farm.includes(query);
-                
+
                 item.style.display = matches ? '' : 'none';
                 if (matches) visibleCount++;
             });
-            
+
             if (countDisplay) {
-                countDisplay.textContent = query 
+                countDisplay.textContent = query
                     ? `${visibleCount} of ${this.currentNode.addresses.length} items`
                     : `${this.currentNode.addresses.length} items`;
             }
@@ -1659,22 +1720,22 @@ export class InfoPanel {
             network: document.getElementById('edit-addr-network').value.trim(),
             type: document.getElementById('edit-addr-type').value.trim()
         };
-        
+
         // Remove empty fields
         Object.keys(addr).forEach(key => {
             if (!addr[key]) delete addr[key];
         });
-        
+
         if (!addr.address) {
             this.showToast('Address is required!', 'error');
             return;
         }
-        
+
         // Update the address
         this.currentNode.addresses[this.selectedAddressIdx] = addr;
-        
+
         this.showToast('Item updated successfully!', 'success');
-        
+
         // Go back to selection
         this.selectedAddressIdx = null;
         const editContent = document.getElementById('tab-edit-content');
@@ -1693,12 +1754,12 @@ export class InfoPanel {
             fee: '',
             description: ''
         };
-        
+
         this.currentNode.addresses.push(newAddr);
-        
+
         // Select the newly added address
         this.selectedAddressIdx = this.currentNode.addresses.length - 1;
-        
+
         const editContent = document.getElementById('tab-edit-content');
         editContent.innerHTML = this.renderNodeEdit(this.currentNode);
         this.setupEditForm();
@@ -1708,9 +1769,9 @@ export class InfoPanel {
         if (confirm(`Are you sure you want to delete this item?`)) {
             this.currentNode.addresses.splice(this.selectedAddressIdx, 1);
             this.selectedAddressIdx = null;
-            
+
             this.showToast('Item deleted successfully!', 'success');
-            
+
             const editContent = document.getElementById('tab-edit-content');
             editContent.innerHTML = this.renderNodeEdit(this.currentNode);
             this.setupEditForm();
@@ -1720,11 +1781,11 @@ export class InfoPanel {
     duplicateSelectedAddress() {
         const sourceAddr = this.currentNode.addresses[this.selectedAddressIdx];
         const newAddr = { ...sourceAddr };
-        
+
         this.currentNode.addresses.push(newAddr);
-        
+
         this.showToast('Item duplicated successfully!', 'success');
-        
+
         const editContent = document.getElementById('tab-edit-content');
         editContent.innerHTML = this.renderNodeEdit(this.currentNode);
         this.setupEditForm();
@@ -1737,7 +1798,7 @@ export class InfoPanel {
             try {
                 await this.onSaveCallback(this.currentNode, 'node', oldName);
                 this.showToast('All changes saved successfully!', 'success');
-                
+
                 // Reset selection and refresh view
                 this.selectedAddressIdx = null;
                 this.showNodeWithTabs(this.currentNode);
@@ -1751,18 +1812,18 @@ export class InfoPanel {
     async saveLinkChanges() {
         const linkName = document.getElementById('edit-link-name').value;
         const linkDescription = document.getElementById('edit-link-description').value;
-        
+
         // Update current link
         const oldName = this.currentLink.name;
         this.currentLink.name = linkName;
         this.currentLink.description = linkDescription;
-        
+
         // Call save callback if exists
         if (this.onSaveCallback) {
             try {
                 await this.onSaveCallback(this.currentLink, 'link', oldName);
                 this.showToast('Changes saved successfully!', 'success');
-                
+
                 // Refresh view
                 this.showLinkWithTabs(this.currentLink);
             } catch (error) {
@@ -1776,18 +1837,18 @@ export class InfoPanel {
         // Remove existing toast
         const existingToast = document.querySelector('.toast');
         if (existingToast) existingToast.remove();
-        
+
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
         toast.innerHTML = `
-            ${type === 'success' 
+            ${type === 'success'
                 ? '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>'
                 : '<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>'
             }
             ${message}
         `;
         document.body.appendChild(toast);
-        
+
         setTimeout(() => {
             toast.style.animation = 'slideOut 0.3s ease-out forwards';
             setTimeout(() => toast.remove(), 300);
@@ -1796,7 +1857,7 @@ export class InfoPanel {
 
     renderAddressItem(address, idx) {
         const hasDetails = address.token0 || address.token1 || address.pool || address.farm || address.description || address.fee;
-        
+
         let html = `
             <div class="address-item" data-idx="${idx}" data-address="${address.address.toLowerCase()}" 
                  data-pool="${(address.pool || '').toLowerCase()}" 
@@ -1808,21 +1869,27 @@ export class InfoPanel {
                     <div class="flex-1 min-w-0">
                         <div class="flex items-center gap-2 mb-2 flex-wrap">
         `;
-        
+
         if (address.label) {
             const strategyClass = this.getStrategyBadgeClass(address.label);
             if (strategyClass) {
                 html += `<span class="strategy-badge ${strategyClass}">${address.label}</span>`;
             } else {
-                html += `<span class="text-sm font-medium text-gray-700">${address.label}</span>`;
+                const labelStyle = this.getLabelBadgeStyle(address.label);
+                html += `<span class="strategy-badge" style="${labelStyle}">${address.label}</span>`;
             }
         }
-        
+
         if (address.farm) {
             const farmClass = this.getFarmBadgeClass(address.farm);
             html += `<span class="farm-badge ${farmClass}">${address.farm}</span>`;
         }
-        
+
+        if (address.strategy) {
+            const stratClass = this.getStrategyBadgeClass(address.strategy);
+            html += `<span class="strategy-badge ${stratClass}">${address.strategy}</span>`;
+        }
+
         if (address.pool || (address.token0 && address.token1)) {
             const t0 = address.token0 || '';
             const t1 = address.token1 || '';
@@ -1834,15 +1901,15 @@ export class InfoPanel {
                 </div>
             `;
         }
-        
+
         html += `
             </div>
                         <div class="address-text">${address.address}</div>
         `;
-        
+
         if (hasDetails) {
             html += `<div class="meta-grid">`;
-            
+
             if (address.fee) {
                 html += `
                     <div class="meta-item">
@@ -1851,7 +1918,7 @@ export class InfoPanel {
                     </div>
                 `;
             }
-            
+
             if (address.network) {
                 html += `
                     <div class="meta-item">
@@ -1860,7 +1927,7 @@ export class InfoPanel {
                     </div>
                 `;
             }
-            
+
             if (address.description) {
                 html += `
                     <div class="meta-item" style="grid-column: span 2;">
@@ -1869,7 +1936,7 @@ export class InfoPanel {
                     </div>
                 `;
             }
-            
+
             if (address.type) {
                 html += `
                     <div class="meta-item">
@@ -1878,10 +1945,10 @@ export class InfoPanel {
                     </div>
                 `;
             }
-            
+
             html += `</div>`;
         }
-        
+
         html += `
                     </div>
                     <a href="https://arbiscan.io/address/${address.address}" 
@@ -1898,21 +1965,21 @@ export class InfoPanel {
                 </div>
             </div>
         `;
-        
+
         return html;
     }
 
     setupSearch(addresses) {
         const searchInput = document.getElementById('address-search');
         const countDisplay = document.getElementById('address-count');
-        
+
         if (!searchInput || !addresses) return;
-        
+
         searchInput.addEventListener('input', (e) => {
             const query = e.target.value.toLowerCase().trim();
             const items = this.contentElement.querySelectorAll('.address-item');
             let visibleCount = 0;
-            
+
             items.forEach(item => {
                 const address = item.dataset.address || '';
                 const pool = item.dataset.pool || '';
@@ -1920,21 +1987,21 @@ export class InfoPanel {
                 const token1 = item.dataset.token1 || '';
                 const label = item.dataset.label || '';
                 const farm = item.dataset.farm || '';
-                
-                const matches = !query || 
+
+                const matches = !query ||
                     address.includes(query) ||
                     pool.includes(query) ||
                     token0.includes(query) ||
                     token1.includes(query) ||
                     label.includes(query) ||
                     farm.includes(query);
-                
+
                 item.style.display = matches ? '' : 'none';
                 if (matches) visibleCount++;
             });
-            
+
             if (countDisplay) {
-                countDisplay.textContent = query 
+                countDisplay.textContent = query
                     ? `${visibleCount} of ${addresses.length} items`
                     : `${addresses.length} items`;
             }

@@ -12,14 +12,16 @@ class App {
         this.addressSearch = new AddressSearch();
         this.crudPanel = new CrudPanel(this.diagramManager);
         this.diagramData = null;
-        
+        this.currentDiagramId = 'main';
+        this.isFlowDiagram = false;
+
         this.init();
     }
 
     async init() {
-        // Load diagram data
+        // Load main_flow as default diagram
         try {
-            const response = await fetch('/api/diagram');
+            const response = await fetch('/api/flows/main_flow');
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -28,31 +30,71 @@ class App {
                 throw new Error('Response is not JSON');
             }
             this.diagramData = await response.json();
-            
+            this.currentDiagramId = 'main_flow';
+            this.isFlowDiagram = true;
+            this.isPaused = false;
+
             // Initialize components
             this.diagramManager.init(this.diagramData, (item, type) => {
                 this.infoPanel.show(item, type);
                 this.showInfoPanel();
             });
-            
+
+            // Setup animation state callback
+            this.diagramManager.setAnimationStateCallback((state) => {
+                this.updateAnimationButtons(state);
+            });
+
             // Initialize info panel with save callback
             this.infoPanel.init(async (item, type, oldName) => {
                 await this.handleSave(item, type, oldName);
             });
-            
+
             // Initialize Sheets Manager
             this.sheetsManager.init();
-            
+
             // Initialize Address Search
             this.addressSearch.init(this.diagramData);
-            
+
             this.crudPanel.init();
-            
+
+            // Load flow diagram options
+            await this.loadFlowOptions();
+
             // Setup UI controls
             this.setupControls();
         } catch (error) {
             console.error('Error initializing app:', error);
             alert('Error loading diagram data. Please refresh the page.');
+        }
+    }
+
+    async loadFlowOptions() {
+        // Flow options are now pre-defined in HTML with grouped categories
+        // No need to dynamically load - all options are already in the dropdown
+        console.log('Flow options pre-defined with categories: Overview, User Operations, Controller Operations');
+    }
+
+    async switchDiagram(diagramId) {
+        try {
+            // All diagrams are now loaded from flows
+            const response = await fetch(`/api/flows/${diagramId}`);
+            const data = await response.json();
+            this.isFlowDiagram = true;
+
+            this.currentDiagramId = diagramId;
+            this.diagramData = data;
+            this.diagramManager.updateData(data);
+            this.addressSearch.init(data);
+
+            // Clear info panel
+            const infoContent = document.getElementById('info-content');
+            if (infoContent) {
+                infoContent.innerHTML = '<p class="text-gray-500">Click on a node or link to view details</p>';
+            }
+        } catch (error) {
+            console.error('Error switching diagram:', error);
+            alert('Error loading diagram. Please try again.');
         }
     }
 
@@ -63,7 +105,7 @@ class App {
             if (nodeIndex !== -1) {
                 this.diagramData.nodes[nodeIndex] = item;
             }
-            
+
             // Update any links that reference the old node name
             if (oldName !== item.node_name) {
                 this.diagramData.links.forEach(link => {
@@ -78,10 +120,10 @@ class App {
                 this.diagramData.links[linkIndex] = item;
             }
         }
-        
+
         // Save to server
         await this.saveDiagram();
-        
+
         // Refresh diagram
         this.diagramManager.updateData(this.diagramData);
     }
@@ -94,11 +136,11 @@ class App {
             },
             body: JSON.stringify(this.diagramData)
         });
-        
+
         if (!response.ok) {
             throw new Error('Failed to save diagram');
         }
-        
+
         return response.json();
     }
 
@@ -135,6 +177,57 @@ class App {
                 resizer.classList.toggle('hidden');
             }
         });
+
+        // Diagram selector
+        const diagramSelect = document.getElementById('diagram-select');
+        diagramSelect?.addEventListener('change', (e) => {
+            this.switchDiagram(e.target.value);
+        });
+
+        // Play Animation button
+        const playAnimationBtn = document.getElementById('btn-play-animation');
+        playAnimationBtn?.addEventListener('click', () => {
+            this.diagramManager.playFlowAnimation();
+        });
+
+        // Pause/Resume Animation button
+        const pauseAnimationBtn = document.getElementById('btn-pause-animation');
+        pauseAnimationBtn?.addEventListener('click', () => {
+            if (this.isPaused) {
+                this.diagramManager.resumeAnimation();
+            } else {
+                this.diagramManager.pauseAnimation();
+            }
+        });
+
+        // Stop Animation button
+        const stopAnimationBtn = document.getElementById('btn-stop-animation');
+        stopAnimationBtn?.addEventListener('click', () => {
+            this.diagramManager.stopAnimation();
+        });
+    }
+
+    updateAnimationButtons(state) {
+        const pauseBtn = document.getElementById('btn-pause-animation');
+        const stopBtn = document.getElementById('btn-stop-animation');
+        const pauseBtnText = document.getElementById('pause-btn-text');
+
+        if (state === 'playing') {
+            this.isPaused = false;
+            pauseBtn.disabled = false;
+            stopBtn.disabled = false;
+            if (pauseBtnText) pauseBtnText.textContent = 'Pause';
+        } else if (state === 'paused') {
+            this.isPaused = true;
+            pauseBtn.disabled = false;
+            stopBtn.disabled = false;
+            if (pauseBtnText) pauseBtnText.textContent = 'Resume';
+        } else if (state === 'stopped') {
+            this.isPaused = false;
+            pauseBtn.disabled = true;
+            stopBtn.disabled = true;
+            if (pauseBtnText) pauseBtnText.textContent = 'Pause';
+        }
     }
 
     switchTab(tabName) {

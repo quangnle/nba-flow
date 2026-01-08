@@ -7,6 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'diagram.json');
 const DATA_DIR = path.join(__dirname, 'data');
+const FLOWS_DIR = path.join(__dirname, 'flows');
 
 // Middleware
 app.use(express.json());
@@ -24,6 +25,42 @@ app.get('/api/diagram', async (req, res) => {
     res.status(500).json({ error: 'Failed to read diagram data', details: error.message });
   }
 });
+
+// List available flow diagrams
+app.get('/api/flows', async (req, res) => {
+  try {
+    if (!fssync.existsSync(FLOWS_DIR)) {
+      return res.json({ flows: [] });
+    }
+    const files = await fs.readdir(FLOWS_DIR);
+    const jsonFiles = files.filter(f => f.endsWith('.json'));
+    const flows = jsonFiles.map(f => ({
+      id: f.replace('.json', ''),
+      name: f.replace('_flow.json', '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+      file: f
+    }));
+    res.json({ flows });
+  } catch (error) {
+    console.error('Error reading flows:', error);
+    res.status(500).json({ error: 'Failed to read flows' });
+  }
+});
+
+// Get specific flow diagram
+app.get('/api/flows/:id', async (req, res) => {
+  try {
+    const flowFile = path.join(FLOWS_DIR, `${req.params.id}.json`);
+    if (!fssync.existsSync(flowFile)) {
+      return res.status(404).json({ error: 'Flow not found' });
+    }
+    const data = await fs.readFile(flowFile, 'utf8');
+    res.json(JSON.parse(data));
+  } catch (error) {
+    console.error('Error reading flow:', error);
+    res.status(500).json({ error: 'Failed to read flow data' });
+  }
+});
+
 
 // Save diagram data (POST)
 app.post('/api/diagram', async (req, res) => {
@@ -53,7 +90,7 @@ app.get('/api/data-files', async (req, res) => {
     if (!fssync.existsSync(DATA_DIR)) {
       return res.json({ files: [] });
     }
-    
+
     const files = await fs.readdir(DATA_DIR);
     const csvFiles = files.filter(f => f.endsWith('.csv'));
     res.json({ files: csvFiles.sort() });
@@ -76,7 +113,7 @@ app.use('/data', express.static(DATA_DIR, {
 app.use(express.static('public'));
 
 // Serve CSV and other files from root directory
-app.use(express.static('.', { 
+app.use(express.static('.', {
   setHeaders: (res, path) => {
     if (path.endsWith('.csv')) {
       res.setHeader('Content-Type', 'text/csv; charset=utf-8');

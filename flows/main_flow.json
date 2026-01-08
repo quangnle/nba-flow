@@ -3,8 +3,8 @@
     {
       "node_name": "Farm Contract",
       "node_type": "contract",
-      "x": 333,
-      "y": 126,
+      "x": 354,
+      "y": 123,
       "addresses": [
         {
           "address": "0xD948db304F93d28B58d2CFb1dAA4Eafd193C6436",
@@ -21,8 +21,8 @@
     {
       "node_name": "Strategies",
       "node_type": "contract",
-      "x": 893,
-      "y": 110,
+      "x": 837,
+      "y": 117,
       "addresses": [
         {
           "address": "0x272F5419512eEA13c41eA0277503Ba8aC97B2074",
@@ -767,8 +767,8 @@
     {
       "node_name": "SDB",
       "node_type": "address",
-      "x": 861,
-      "y": 525,
+      "x": 876,
+      "y": 527,
       "addresses": [
         {
           "address": "0x1a67e36f468fc3fea4aeb0a7a46ba01ab2fc09cd",
@@ -789,102 +789,102 @@
       "y": 518,
       "addresses": [
         {
-          "address": "0x9fb76181f826cbbe9e16223fef3a5a1e3149b6ac",
-          "label": "Fund Manager",
-          "strategy": "Strategy 1, 4, 5"
+            "address": "0x9fb76181f826cbbe9e16223fef3a5a1e3149b6ac",
+            "label": "Fund Manager",
+            "strategy": "Strategy 1, 4, 5"
         },
         {
-          "address": "0x70f4dd3bAE74b5581A18820AcffF2845417C1d6D",
-          "label": "Fund Manager",
-          "strategy": "Strategy 1, 4, 5"
+            "address": "0x70f4dd3bAE74b5581A18820AcffF2845417C1d6D",
+            "label": "Fund Manager",
+            "strategy": "Strategy 1, 4, 5"
         },
         {
-          "address": "0xB971f2ED27Ba11Ecf543979222f6ff217114c423",
-          "label": "Fund Manager",
-          "strategy": "Strategy 2"
+            "address": "0xB971f2ED27Ba11Ecf543979222f6ff217114c423",
+            "label": "Fund Manager",
+            "strategy": "Strategy 2"
         },
         {
-          "address": "0x1da8E01F219Aff2BA29583b980F1Ad086fea8242",
-          "label": "Fund Manager",
-          "strategy": "Strategy 2"
+            "address": "0x1da8E01F219Aff2BA29583b980F1Ad086fea8242",
+            "label": "Fund Manager",
+            "strategy": "Strategy 2"
         },
         {
-          "address": "0x10731342Ea494db5Af41f538DB2cDa9CD4580c45",
-          "label": "Fund Manager",
-          "strategy": "Strategy 3"
+            "address": "0x10731342Ea494db5Af41f538DB2cDa9CD4580c45",
+            "label": "Fund Manager",
+            "strategy": "Strategy 3"
         },
         {
-          "address": "0x61759aaA0b03D76e869046D01494204fb6A25233",
-          "label": "Fund Manager",
-          "strategy": "Strategy 3"
+            "address": "0x61759aaA0b03D76e869046D01494204fb6A25233",
+            "label": "Fund Manager",
+            "strategy": "Strategy 3"
         },
         {
-          "address": "0xB742A477412F90463B8142D94f4322C1C0CECB53",
-          "label": "Fund Manager",
-          "strategy": "Strategy 6"
+            "address": "0xB742A477412F90463B8142D94f4322C1C0CECB53",
+            "label": "Fund Manager",
+            "strategy": "Strategy 6"
         },
         {
-          "address": "0x0B0074D667E99679600D89192B12C597cdc3aFD8",
-          "label": "Fund Manager",
-          "strategy": "Strategy 6"
+            "address": "0x0B0074D667E99679600D89192B12C597cdc3aFD8",
+            "label": "Fund Manager",
+            "strategy": "Strategy 6"
         },
         {
-          "address": "0x5c957f5ad80d29b62a66c3a1fc50dba969ad39ed",
-          "label": "Fee collector",
-          "strategy": "Strategy 1, 4, 5"
+            "address": "0x5c957f5ad80d29b62a66c3a1fc50dba969ad39ed",
+            "label": "Fee collector",
+            "strategy": "Strategy 1, 4, 5"
         },
         {
-          "address": "0x7f98ea842230014133521c596dcbb9d96c7ff186",
-          "label": "Fee Collector",
-          "strategy": "Strategy 2"
+            "address": "0x7f98ea842230014133521c596dcbb9d96c7ff186",
+            "label": "Fee Collector",
+            "strategy": "Strategy 2"
         },
         {
-          "address": "0xec4fe6a0af65acf8c63721d6e9e8e63003f69555",
-          "label": "Fee Collector",
-          "strategy": "Strategy 3"
+            "address": "0xec4fe6a0af65acf8c63721d6e9e8e63003f69555",
+            "label": "Fee Collector",
+            "strategy": "Strategy 3"
         },
         {
-          "address": "0xF560d6d308beE7951E46f7D350F8579a736c4Dd3",
-          "label": "Fee Collector",
-          "strategy": "Strategy 6"
+            "address": "0xF560d6d308beE7951E46f7D350F8579a736c4Dd3",
+            "label": "Fee Collector",
+            "strategy": "Strategy 6"
         },
         {
-          "address": "0x7503ae243d2399da637ae19b78c1ccddb4a556be",
-          "label": "Fee Collector",
-          "strategy": "unknown/discontinued"
+            "address": "0x7503ae243d2399da637ae19b78c1ccddb4a556be",
+            "label": "Fee Collector",
+            "strategy": "unknown/discontinued"
         },
         {
-          "address": "0x0cdf828738d2a8e8a1a55355db1197f450f397c6",
-          "label": "Fee Collector",
-          "strategy": "unknown/discontinued"
+            "address": "0x0cdf828738d2a8e8a1a55355db1197f450f397c6",
+            "label": "Fee Collector",
+            "strategy": "unknown/discontinued"
         },
         {
-          "address": "0xb67fc2caaa0dde555efeac87c0dc9ee31833d300",
-          "label": "Fee Collector",
-          "strategy": "unknown/discontinued"
+            "address": "0xb67fc2caaa0dde555efeac87c0dc9ee31833d300",
+            "label": "Fee Collector",
+            "strategy": "unknown/discontinued"
         },
         {
-          "address": "0x92f43bc9ca8b6d020d5d9055dd5417e497d7f9bd",
-          "label": "Fee Collector",
-          "strategy": "unknown/discontinued"
+            "address": "0x92f43bc9ca8b6d020d5d9055dd5417e497d7f9bd",
+            "label": "Fee Collector",
+            "strategy": "unknown/discontinued"
         },
         {
-          "address": "0xc61a02bd96055109208c4bc3d1e1f4728469b4fa",
-          "label": "Fee Collector",
-          "strategy": "unknown/discontinued"
+            "address": "0xc61a02bd96055109208c4bc3d1e1f4728469b4fa",
+            "label": "Fee Collector",
+            "strategy": "unknown/discontinued"
         },
         {
-          "address": "0xe07c58e89961d29318d2c2d88c60852ca235ef39",
-          "label": "Fee Collector",
-          "strategy": "unknown/discontinued"
+            "address": "0xe07c58e89961d29318d2c2d88c60852ca235ef39",
+            "label": "Fee Collector",
+            "strategy": "unknown/discontinued"
         }
-      ]
+    ]
     },
     {
       "node_name": "DoIt",
       "node_type": "address",
-      "x": 867,
-      "y": 625,
+      "x": 888,
+      "y": 612,
       "addresses": [
         {
           "address": "0x99a373a3f236c9682fc6efc20171c315a8c16611",
@@ -901,8 +901,8 @@
     {
       "node_name": "NBA success fee",
       "node_type": "address",
-      "x": 857,
-      "y": 448,
+      "x": 902,
+      "y": 356,
       "addresses": [
         {
           "address": "0xd0788b16c3536d2a1bc8b16834ee149e2acdb104",
@@ -914,8 +914,8 @@
     {
       "node_name": "X",
       "node_type": "address",
-      "x": 863,
-      "y": 708,
+      "x": 871,
+      "y": 710,
       "addresses": [
         {
           "address": "0x69f3ba775f9b99a0ff6f74d9bc8080e96b3a681d",
