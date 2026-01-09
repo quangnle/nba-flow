@@ -45,6 +45,15 @@ class App {
                 this.updateAnimationButtons(state);
             });
 
+            // Setup step change callback for side panel sync
+            this.diagramManager.setStepChangeCallback((link) => {
+                // Determine if panel is visible
+                const infoPanel = document.getElementById('info-panel');
+                if (infoPanel && !infoPanel.classList.contains('hidden')) {
+                    this.infoPanel.show(link, 'link');
+                }
+            });
+
             // Initialize info panel with save callback
             this.infoPanel.init(async (item, type, oldName) => {
                 await this.handleSave(item, type, oldName);
@@ -169,7 +178,7 @@ class App {
             this.switchTab('search');
         });
 
-        // Toggle info panel từ nút bên trong panel
+        // Toggle info panel from inner button
         togglePanelBtn?.addEventListener('click', () => {
             const resizer = document.getElementById('info-panel-resizer');
             infoPanel.classList.toggle('hidden');
@@ -187,7 +196,7 @@ class App {
         // Play Animation button
         const playAnimationBtn = document.getElementById('btn-play-animation');
         playAnimationBtn?.addEventListener('click', () => {
-            this.diagramManager.playFlowAnimation();
+            this.diagramManager.startAnimation();
         });
 
         // Pause/Resume Animation button
@@ -200,6 +209,17 @@ class App {
             }
         });
 
+        // Manual Step Controls
+        const prevStepBtn = document.getElementById('btn-prev-step');
+        prevStepBtn?.addEventListener('click', () => {
+            this.diagramManager.prevStep();
+        });
+
+        const nextStepBtn = document.getElementById('btn-next-step');
+        nextStepBtn?.addEventListener('click', () => {
+            this.diagramManager.nextStep();
+        });
+
         // Stop Animation button
         const stopAnimationBtn = document.getElementById('btn-stop-animation');
         stopAnimationBtn?.addEventListener('click', () => {
@@ -210,22 +230,30 @@ class App {
     updateAnimationButtons(state) {
         const pauseBtn = document.getElementById('btn-pause-animation');
         const stopBtn = document.getElementById('btn-stop-animation');
+        const prevBtn = document.getElementById('btn-prev-step');
+        const nextBtn = document.getElementById('btn-next-step');
         const pauseBtnText = document.getElementById('pause-btn-text');
 
         if (state === 'playing') {
             this.isPaused = false;
-            pauseBtn.disabled = false;
-            stopBtn.disabled = false;
+            if (pauseBtn) pauseBtn.disabled = false;
+            if (stopBtn) stopBtn.disabled = false;
+            if (prevBtn) prevBtn.disabled = false;
+            if (nextBtn) nextBtn.disabled = false;
             if (pauseBtnText) pauseBtnText.textContent = 'Pause';
         } else if (state === 'paused') {
             this.isPaused = true;
-            pauseBtn.disabled = false;
-            stopBtn.disabled = false;
+            if (pauseBtn) pauseBtn.disabled = false;
+            if (stopBtn) stopBtn.disabled = false;
+            if (prevBtn) prevBtn.disabled = false;
+            if (nextBtn) nextBtn.disabled = false;
             if (pauseBtnText) pauseBtnText.textContent = 'Resume';
         } else if (state === 'stopped') {
             this.isPaused = false;
-            pauseBtn.disabled = true;
-            stopBtn.disabled = true;
+            if (pauseBtn) pauseBtn.disabled = true;
+            if (stopBtn) stopBtn.disabled = true;
+            if (prevBtn) prevBtn.disabled = true;
+            if (nextBtn) nextBtn.disabled = true;
             if (pauseBtnText) pauseBtnText.textContent = 'Pause';
         }
     }

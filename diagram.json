@@ -3,8 +3,8 @@
     {
       "node_name": "Farm Contract",
       "node_type": "contract",
-      "x": 354,
-      "y": 223,
+      "x": 323,
+      "y": 225,
       "addresses": [
         {
           "address": "0xD948db304F93d28B58d2CFb1dAA4Eafd193C6436",
@@ -21,8 +21,8 @@
     {
       "node_name": "Strategies",
       "node_type": "contract",
-      "x": 895,
-      "y": 254,
+      "x": 837,
+      "y": 217,
       "addresses": [
         {
           "address": "0x272F5419512eEA13c41eA0277503Ba8aC97B2074",
@@ -761,8 +761,8 @@
       "node_name": "Controller",
       "node_type": "contract",
       "description": "Administrative contract managing Strategy operations. Triggers: collectReward() (collect fees from Pool), earnPrepare() (convert fees to WBTC), earn() (distribute rewards), rescale() (reposition liquidity).",
-      "x": 924,
-      "y": 131,
+      "x": 833,
+      "y": 119,
       "addresses": [
         {
           "address": "0x2640a796794b6d7b8565c23c54b90b6b8463e3de",
@@ -789,15 +789,15 @@
     {
       "node_name": "User",
       "node_type": "address",
-      "x": 333,
-      "y": 674,
+      "x": 255,
+      "y": 655,
       "addresses": []
     },
     {
       "node_name": "SDB",
       "node_type": "address",
-      "x": 876,
-      "y": 627,
+      "x": 891,
+      "y": 616,
       "addresses": [
         {
           "address": "0x1a67e36f468fc3fea4aeb0a7a46ba01ab2fc09cd",
@@ -930,8 +930,8 @@
     {
       "node_name": "NBA success fee",
       "node_type": "address",
-      "x": 902,
-      "y": 456,
+      "x": 778,
+      "y": 484,
       "addresses": [
         {
           "address": "0xd0788b16c3536d2a1bc8b16834ee149e2acdb104",

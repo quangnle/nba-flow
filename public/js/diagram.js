@@ -8,6 +8,8 @@ export class DiagramManager {
         this.linkElements = null;
         this.onItemClick = null;
         this.drag = null;
+        this.onStepChangeCallback = null;
+        this.onAnimationStateChange = null;
     }
 
     init(data, onItemClick) {
@@ -214,6 +216,8 @@ export class DiagramManager {
             .attr('transform', d => `translate(${d.x},${d.y})`)
             .call(this.drag)
             .on('click', (event, d) => {
+                if (event.defaultPrevented) return; // Ignore if drag handled it
+                if (this.isDragging) return; // Double check custom flag
                 event.stopPropagation();
                 this.onItemClick(d, 'node');
             });
@@ -259,11 +263,14 @@ export class DiagramManager {
         if (!this.drag) {
             this.drag = d3.drag()
                 .on('start', (event, d) => {
+                    this.isDragging = false; // Reset drag flag
                     // Raise the node group
                     d3.select(event.sourceEvent.target.closest('g.node') || event.sourceEvent.target)
                         .raise();
                 })
                 .on('drag', (event, d) => {
+                    this.isDragging = true; // Mark as dragging
+
                     // Get mouse position relative to SVG
                     const [x, y] = d3.pointer(event, this.svg.node());
 
@@ -292,7 +299,11 @@ export class DiagramManager {
                     this.updateLinks();
                 })
                 .on('end', () => {
-                    this.savePositions();
+                    if (this.isDragging) {
+                        this.savePositions();
+                        // Delay clearing flag to ensure click handler sees it
+                        setTimeout(() => { this.isDragging = false; }, 50);
+                    }
                 });
         }
     }
@@ -580,6 +591,7 @@ export class DiagramManager {
     }
 
     // Create and show the step overlay
+
     showStepOverlay() {
         // Remove existing overlay if any
         this.hideStepOverlay();
@@ -590,162 +602,157 @@ export class DiagramManager {
         const overlay = document.createElement('div');
         overlay.id = 'step-overlay';
         overlay.innerHTML = `
-            <div class="step-header">
-                Step <span id="step-current">-</span> of <span id="step-total">-</span>
+            <div class="step-badge">Step <span id="step-current">1</span>/<span id="step-total">?</span></div>
+            <div class="step-content">
+                <div class="step-summary" id="step-summary">Loading...</div>
+                <div class="step-hint">See full details in Info Panel 👉</div>
             </div>
-            <div class="step-flow">
-                <div class="step-from">From: <span id="step-from">-</span></div>
-                <div class="step-to">To: <span id="step-to">-</span></div>
-            </div>
-            <div class="step-description" id="step-description">Preparing animation...</div>
         `;
+
+        // New styles for floating overlay
         overlay.style.cssText = `
             position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -120%); /* Center horizontally, move above target */
+            background: rgba(15, 23, 42, 0.95);
             color: white;
-            padding: 16px 20px;
+            padding: 12px 16px;
             border-radius: 12px;
-            max-width: 400px;
-            min-width: 300px;
+            width: 280px;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
             font-family: 'Plus Jakarta Sans', sans-serif;
             z-index: 1000;
             backdrop-filter: blur(10px);
-            animation: slideUp 0.3s ease-out;
+            opacity: 0;
+            pointer-events: auto;
+            cursor: pointer;
+            transition: top 0.5s ease, left 0.5s ease, opacity 0.3s, transform 0.2s;
         `;
 
-        // Add animation keyframes
-        if (!document.getElementById('overlay-styles')) {
+        // Add click listener to show info
+        overlay.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (this.animationData && this.animationData.linksWithOrder) {
+                const currentItem = this.animationData.linksWithOrder[this.animationData.currentStep];
+                if (currentItem && currentItem.link && this.onItemClick) {
+                    // Highlight the click effect
+                    overlay.style.transform = 'translate(-50%, -120%) scale(0.95)';
+                    setTimeout(() => {
+                        overlay.style.transform = 'translate(-50%, -120%) scale(1)';
+                    }, 100);
+
+                    this.onItemClick(currentItem.link, 'link');
+                }
+            }
+        });
+
+        // Arrow triangle at bottom
+        const arrow = document.createElement('div');
+        arrow.style.cssText = `
+             position: absolute;
+             bottom: -6px;
+             left: 50%;
+             transform: translateX(-50%) rotate(45deg);
+             width: 12px;
+             height: 12px;
+             background: rgba(15, 23, 42, 0.95);
+             border-right: 1px solid rgba(255,255,255,0.1);
+             border-bottom: 1px solid rgba(255,255,255,0.1);
+        `;
+        overlay.appendChild(arrow);
+
+        // Add specific styles for internal elements
+        if (!document.getElementById('floating-overlay-styles')) {
             const style = document.createElement('style');
-            style.id = 'overlay-styles';
+            style.id = 'floating-overlay-styles';
             style.textContent = `
-                @keyframes slideUp {
-                    from { opacity: 0; transform: translateY(20px); }
-                    to { opacity: 1; transform: translateY(0); }
-                }
-                @keyframes pulse {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.7; }
-                }
-                #step-overlay .step-header {
-                    font-size: 12px;
-                    color: #94a3b8;
-                    margin-bottom: 12px;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
-                }
-                #step-overlay .step-header span {
-                    color: #00D4AA;
-                    font-weight: 600;
-                }
-                #step-overlay .step-flow {
-                    margin-bottom: 12px;
-                    font-size: 14px;
-                }
-                #step-overlay .step-from,
-                #step-overlay .step-to {
-                    margin-bottom: 4px;
-                    color: #cbd5e1;
-                }
-                #step-overlay .step-from span {
-                    color: #00D4AA;
-                    font-weight: 600;
-                }
-                #step-overlay .step-to span {
-                    color: #FF6B35;
-                    font-weight: 600;
-                }
-                #step-overlay .step-description {
-                    font-size: 14px;
-                    color: #e2e8f0;
-                    line-height: 1.5;
-                    border-top: 1px solid rgba(255,255,255,0.1);
-                    padding-top: 12px;
-                }
-                #step-overlay .step-description p {
-                    margin: 0 0 8px 0;
-                }
-                #step-overlay .step-description p:last-child {
-                    margin-bottom: 0;
-                }
-                #step-overlay .step-description code {
-                    background: rgba(0, 212, 170, 0.1);
-                    color: #00D4AA;
-                    padding: 2px 4px;
+                #step-overlay .step-badge {
+                    display: inline-block;
+                    background: #00D4AA;
+                    color: #0f172a;
+                    font-size: 10px;
+                    font-weight: 700;
+                    padding: 2px 6px;
                     border-radius: 4px;
-                    font-family: 'JetBrains Mono', monospace;
-                    font-size: 0.9em;
+                    margin-bottom: 6px;
+                    text-transform: uppercase;
                 }
-                #step-overlay .step-description strong {
-                    color: white;
-                    font-weight: 600;
+                #step-overlay .step-summary {
+                    font-size: 13px;
+                    line-height: 1.4;
+                    color: #f1f5f9;
+                    font-weight: 500;
                 }
-                #step-overlay.animating .step-header span {
-                    animation: pulse 1s ease-in-out infinite;
+                #step-overlay .step-hint {
+                    font-size: 10px;
+                    color: #94a3b8;
+                    margin-top: 6px;
+                    font-style: italic;
                 }
             `;
             document.head.appendChild(style);
         }
 
         container.appendChild(overlay);
+
+        // Force reflow
+        overlay.offsetHeight;
+        overlay.style.opacity = '1';
     }
 
-    // Update the step overlay with current step info
-    updateStepOverlay(from, to, description, currentStep, totalSteps) {
+    // Update the step overlay with position
+    updateStepOverlay(from, to, description, currentStep, totalSteps, x, y) {
         const stepCurrentEl = document.getElementById('step-current');
         const stepTotalEl = document.getElementById('step-total');
-        const stepFromEl = document.getElementById('step-from');
-        const stepToEl = document.getElementById('step-to');
-        const stepDescEl = document.getElementById('step-description');
+        const stepSummaryEl = document.getElementById('step-summary');
         const overlay = document.getElementById('step-overlay');
+
+        if (!overlay) return;
 
         if (stepCurrentEl) stepCurrentEl.textContent = currentStep + 1;
         if (stepTotalEl) stepTotalEl.textContent = totalSteps;
-        if (stepFromEl) stepFromEl.textContent = from;
-        if (stepToEl) stepToEl.textContent = to;
 
-        if (stepDescEl) {
-            // Use provided formatted description or fallback to simple mapping
-            let rawDesc = description || this.getSimpleDescription(from, to);
-            // Remove step number prefix like "[1] " for cleaner display
-            rawDesc = rawDesc.replace(/^\[\d+[a-z]?\]\s*/, '');
-
-            // Render markdown if available
-            if (typeof marked !== 'undefined' && marked.parse) {
-                stepDescEl.innerHTML = marked.parse(rawDesc);
-            } else {
-                stepDescEl.textContent = rawDesc;
+        if (stepSummaryEl) {
+            let summary = this.getSimpleDescription(from, to);
+            // Try to extract bold text or first line from description
+            if (description) {
+                const firstLine = description.split('\n')[0];
+                summary = firstLine.replace(/\*\*/g, '').replace(/^-\s*/, '').replace(/\[.*?\]\s*/, '');
             }
+            stepSummaryEl.textContent = summary;
         }
 
-        if (overlay) overlay.classList.add('animating');
+        // Move overlay
+        if (x !== undefined && y !== undefined) {
+            overlay.style.left = x + 'px';
+            overlay.style.top = y + 'px';
+        }
     }
 
     // Hide and remove the step overlay
     hideStepOverlay() {
         const overlay = document.getElementById('step-overlay');
         if (overlay) {
-            overlay.style.animation = 'slideUp 0.2s ease-out reverse';
-            setTimeout(() => overlay.remove(), 200);
+            overlay.style.opacity = '0';
+            setTimeout(() => overlay.remove(), 300);
         }
     }
 
     // Play flow animation - arrows light up in sequence with drawing effect
-    playFlowAnimation() {
-        if (!this.linkElements || !this.data || !this.data.links) {
-            console.warn('No links to animate');
-            return;
+    startAnimation() {
+        if (this.isAnimating && !this.isPaused) return;
+
+        // Reset if we're at the end
+        if (this.animationData && this.animationData.currentStep >= this.animationData.linksWithOrder.length) {
+            this.stopAnimation();
         }
 
-        // Stop any existing animation completely first
-        this.stopAnimation(true); // silent stop without callback
-
-        // Small delay to ensure clean state
-        setTimeout(() => {
+        if (!this.isAnimating) {
             this._startAnimation();
-        }, 100);
+        } else {
+            this.resumeAnimation();
+        }
     }
 
     _startAnimation() {
@@ -765,7 +772,6 @@ export class DiagramManager {
                     step: this.getStepNumber(link.description)
                 }))
                 .sort((a, b) => {
-                    // Sort by step number, handling letters like "3a", "3b"
                     const aNum = parseFloat(a.step) || 999;
                     const bNum = parseFloat(b.step) || 999;
                     if (aNum !== bNum) return aNum - bNum;
@@ -797,90 +803,230 @@ export class DiagramManager {
 
     _animateStep() {
         if (!this.isAnimating) return;
-        if (this.isPaused) return; // Don't proceed if paused
+        if (this.isPaused) return;
 
         const { linksWithOrder, currentStep, stepDuration, drawDuration, activeColor, completedColor, pulseColor } = this.animationData;
 
         if (currentStep >= linksWithOrder.length) {
-            // Animation complete - update overlay to show completion
-            const stepDescEl = document.getElementById('step-description');
-            if (stepDescEl) stepDescEl.textContent = 'Animation complete!';
-            this.animationTimeoutId = setTimeout(() => {
-                if (this.isAnimating) {
-                    this.stopAnimation();
-                }
-            }, 2000);
+            // Animation complete
+            this.stopAnimation();
             return;
         }
 
-        const { link, index } = linksWithOrder[currentStep];
-        const linkLine = this.svg.selectAll('.links line').filter((d, i) => i === index);
+        const item = linksWithOrder[currentStep];
+        const link = item.link;
+        const index = item.index;
 
-        // Update step overlay with from/to node names and description
-        this.updateStepOverlay(link.from, link.to, link.description, currentStep, linksWithOrder.length);
+        // Highlight current step
+        const visibleLink = this.svg.selectAll('.links line.link').filter((_, i) => i === index);
 
-        // Get line length for stroke-dasharray animation
-        const lineNode = linkLine.node();
+        // Calculate midpoint for floating overlay
+        const fromNode = this.data.nodes.find(n => n.node_name === link.from);
+        const toNode = this.data.nodes.find(n => n.node_name === link.to);
+
+        let overlayX = window.innerWidth / 2;
+        let overlayY = window.innerHeight / 2;
+
+        if (fromNode && toNode) {
+            const offset = link.curve_offset || 0;
+            const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+
+            const startX = this.getLinkStartX(fromNode, link) + Math.sin(angle) * offset;
+            const startY = this.getLinkStartY(fromNode, link) - Math.cos(angle) * offset;
+            const endX = this.getLinkEndX(toNode, link) + Math.sin(angle) * offset;
+            const endY = this.getLinkEndY(toNode, link) - Math.cos(angle) * offset;
+
+            const midX = (startX + endX) / 2;
+            const midY = (startY + endY) / 2;
+
+            // Scroll container to keep active link in view
+            const container = document.getElementById('diagram-container');
+            if (container) {
+                const containerRect = container.getBoundingClientRect();
+                const scrollX = midX - containerRect.width / 2;
+                const scrollY = midY - containerRect.height / 2;
+
+                container.scrollTo({
+                    top: Math.max(0, scrollY),
+                    left: Math.max(0, scrollX),
+                    behavior: 'smooth'
+                });
+            }
+
+            overlayX = midX;
+            overlayY = midY;
+        }
+
+        // Update Overlay
+        this.updateStepOverlay(
+            link.from,
+            link.to,
+            link.description,
+            currentStep,
+            linksWithOrder.length,
+            overlayX,
+            overlayY
+        );
+
+        // Callback for side panel
+        if (this.onStepChangeCallback) {
+            this.onStepChangeCallback(link);
+        }
+
+        // Animate Line
+        const lineNode = visibleLink.node();
         if (lineNode) {
             const lineLength = lineNode.getTotalLength ? lineNode.getTotalLength() : 200;
 
-            // Phase 1: Draw the line with stroke-dashoffset animation
-            linkLine
+            visibleLink
                 .attr('stroke', activeColor)
                 .attr('stroke-width', 5)
+                .attr('opacity', 1)
                 .attr('stroke-dasharray', lineLength)
                 .attr('stroke-dashoffset', lineLength)
                 .transition()
                 .duration(drawDuration)
                 .ease(d3.easeQuadOut)
                 .attr('stroke-dashoffset', 0)
-                // Phase 2: Pulse effect
-                .transition()
-                .duration(300)
-                .attr('stroke', pulseColor)
-                .attr('stroke-width', 7)
-                .transition()
-                .duration(300)
-                .attr('stroke', activeColor)
-                .attr('stroke-width', 5)
-                // Phase 3: Settle to completed state
-                .transition()
-                .duration(500)
-                .attr('stroke', completedColor)
-                .attr('stroke-width', 3)
-                .attr('stroke-dasharray', 'none');
-        }
+                .on('end', () => {
+                    if (this.isAnimating && !this.isPaused) {
+                        this.animationData.completedIndices.add(index);
 
-        this.animationData.completedIndices.add(index);
-        this.animationData.currentStep++;
-        this.animationTimeoutId = setTimeout(() => this._animateStep(), stepDuration);
+                        visibleLink
+                            .transition()
+                            .duration(300)
+                            .attr('stroke', completedColor)
+                            .attr('stroke-width', 3)
+                            .attr('stroke-dasharray', null);
+
+                        this.animationData.currentStep++;
+                        this.animationTimeoutId = setTimeout(() => this._animateStep(), stepDuration);
+                    }
+                });
+        }
     }
 
-    // Pause the animation
     pauseAnimation() {
-        if (!this.isAnimating || this.isPaused) return;
-
+        if (!this.isAnimating) return;
         this.isPaused = true;
-
-        // Clear pending timeout
         if (this.animationTimeoutId) {
             clearTimeout(this.animationTimeoutId);
             this.animationTimeoutId = null;
         }
-
+        this.svg.selectAll('.links line').interrupt(); // Stop transitions
         this._notifyStateChange('paused');
     }
 
-    // Resume the animation
     resumeAnimation() {
         if (!this.isAnimating || !this.isPaused) return;
-
         this.isPaused = false;
         this._notifyStateChange('playing');
-
-        // Continue from where we left off
         this._animateStep();
     }
+
+    nextStep() {
+        if (!this.isAnimating && !this.isPaused) this.startAnimation();
+
+        this.pauseAnimation(); // Manual control means we are paused
+
+        // Complete current step visually immediately
+        if (this.animationData && this.animationData.currentStep < this.animationData.linksWithOrder.length) {
+            const item = this.animationData.linksWithOrder[this.animationData.currentStep];
+            if (item) {
+                this.animationData.completedIndices.add(item.index);
+                this.svg.selectAll('.links line.link').filter((_, i) => i === item.index)
+                    .attr('stroke', this.animationData.completedColor)
+                    .attr('stroke-width', 3)
+                    .attr('stroke-dasharray', null)
+                    .attr('stroke-dashoffset', null)
+                    .attr('opacity', 1);
+            }
+        }
+
+        if (this.animationData.currentStep < this.animationData.linksWithOrder.length) {
+            this.animationData.currentStep++;
+        }
+
+        if (this.animationData.currentStep >= this.animationData.linksWithOrder.length) {
+            this.stopAnimation();
+        } else {
+            this._showStepStatic(this.animationData.currentStep);
+        }
+    }
+
+    prevStep() {
+        if (!this.animationData) return;
+
+        this.pauseAnimation();
+
+        if (this.animationData.currentStep > 0) {
+            // Revert current step visual
+            if (this.animationData.currentStep < this.animationData.linksWithOrder.length) {
+                const curItem = this.animationData.linksWithOrder[this.animationData.currentStep];
+                // If it was already highlighted (completed), revert it
+                this.svg.selectAll('.links line.link').filter((_, i) => i === curItem.index)
+                    .attr('stroke', '#555')
+                    .attr('opacity', 0.4);
+            }
+
+            this.animationData.currentStep--;
+
+            // Revert previous step from completed to active/static
+            const prevItem = this.animationData.linksWithOrder[this.animationData.currentStep];
+            this.animationData.completedIndices.delete(prevItem.index);
+
+            this._showStepStatic(this.animationData.currentStep);
+        }
+    }
+
+    _showStepStatic(stepIndex) {
+        const item = this.animationData.linksWithOrder[stepIndex];
+        const link = item.link;
+        const index = item.index;
+
+        // Reset visual to active state (no animation)
+        const visibleLink = this.svg.selectAll('.links line.link').filter((_, i) => i === index);
+        visibleLink
+            .interrupt()
+            .attr('stroke', this.animationData.activeColor)
+            .attr('stroke-width', 5)
+            .attr('opacity', 1)
+            .attr('stroke-dasharray', null)
+            .attr('stroke-dashoffset', null);
+
+        // Trigger overlay update (copy logic from _animateSelf or refactor)
+        // For brevity, calling refactored logic via timeout or direct call if exposed
+        // Re-using calculation logic briefly here:
+        const fromNode = this.data.nodes.find(n => n.node_name === link.from);
+        const toNode = this.data.nodes.find(n => n.node_name === link.to);
+        let overlayX = 0, overlayY = 0;
+        if (fromNode && toNode) {
+            const offset = link.curve_offset || 0;
+            const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+            const startX = this.getLinkStartX(fromNode, link) + Math.sin(angle) * offset;
+            const startY = this.getLinkStartY(fromNode, link) - Math.cos(angle) * offset;
+            const endX = this.getLinkEndX(toNode, link) + Math.sin(angle) * offset;
+            const endY = this.getLinkEndY(toNode, link) - Math.cos(angle) * offset;
+            overlayX = (startX + endX) / 2;
+            overlayY = (startY + endY) / 2;
+
+            const container = document.getElementById('diagram-container');
+            const containerRect = container.getBoundingClientRect();
+            container.scrollTo({
+                top: Math.max(0, overlayY - containerRect.height / 2),
+                left: Math.max(0, overlayX - containerRect.width / 2),
+                behavior: 'smooth'
+            });
+        }
+
+        this.updateStepOverlay(link.from, link.to, link.description, stepIndex, this.animationData.linksWithOrder.length, overlayX, overlayY);
+
+        if (this.onStepChangeCallback) {
+            this.onStepChangeCallback(link);
+        }
+    }
+
+
 
     // Stop animation and reset styles
     stopAnimation(silent = false) {
@@ -923,6 +1069,11 @@ export class DiagramManager {
         if (this.onAnimationStateChange) {
             this.onAnimationStateChange(state);
         }
+    }
+
+    // Set callback for step changes (syncs with side panel)
+    setStepChangeCallback(callback) {
+        this.onStepChangeCallback = callback;
     }
 }
 
