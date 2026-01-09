@@ -99,14 +99,15 @@ export class DiagramManager {
             linkOffsets[index] = link.curve_offset || 0;
         });
 
-        // Create links with arrow markers
-        this.linkElements = linkGroup
-            .selectAll('line')
+        // Create invisible hit areas for easier link selection (wider clickable area)
+        this.hitAreas = linkGroup
+            .selectAll('line.hit-area')
             .data(this.data.links)
             .enter()
             .append('line')
-            .attr('class', 'link')
-            .attr('marker-end', 'url(#arrowhead)')
+            .attr('class', 'hit-area')
+            .attr('stroke', 'transparent')
+            .attr('stroke-width', 16) // Wide invisible hit area
             .attr('x1', (d, i) => {
                 const fromNode = this.data.nodes.find(n => n.node_name === d.from);
                 const toNode = this.data.nodes.find(n => n.node_name === d.to);
@@ -139,12 +140,63 @@ export class DiagramManager {
                 const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
                 return this.getLinkEndY(toNode, d) - Math.cos(angle) * offset;
             })
-            .on('mouseenter', function () {
-                d3.select(this).attr('stroke', '#0066cc').attr('stroke-width', 3);
+            .style('cursor', 'pointer');
+
+        // Create visible links with arrow markers
+        this.linkElements = linkGroup
+            .selectAll('line.link')
+            .data(this.data.links)
+            .enter()
+            .append('line')
+            .attr('class', 'link')
+            .attr('marker-end', 'url(#arrowhead)')
+            .attr('stroke-width', 2) // Original 2px thickness
+            .attr('x1', (d, i) => {
+                const fromNode = this.data.nodes.find(n => n.node_name === d.from);
+                const toNode = this.data.nodes.find(n => n.node_name === d.to);
+                if (!fromNode || !toNode) return 0;
+                const offset = linkOffsets[i] || 0;
+                const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                return this.getLinkStartX(fromNode, d) + Math.sin(angle) * offset;
+            })
+            .attr('y1', (d, i) => {
+                const fromNode = this.data.nodes.find(n => n.node_name === d.from);
+                const toNode = this.data.nodes.find(n => n.node_name === d.to);
+                if (!fromNode || !toNode) return 0;
+                const offset = linkOffsets[i] || 0;
+                const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                return this.getLinkStartY(fromNode, d) - Math.cos(angle) * offset;
+            })
+            .attr('x2', (d, i) => {
+                const fromNode = this.data.nodes.find(n => n.node_name === d.from);
+                const toNode = this.data.nodes.find(n => n.node_name === d.to);
+                if (!toNode || !fromNode) return 0;
+                const offset = linkOffsets[i] || 0;
+                const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                return this.getLinkEndX(toNode, d) + Math.sin(angle) * offset;
+            })
+            .attr('y2', (d, i) => {
+                const fromNode = this.data.nodes.find(n => n.node_name === d.from);
+                const toNode = this.data.nodes.find(n => n.node_name === d.to);
+                if (!toNode || !fromNode) return 0;
+                const offset = linkOffsets[i] || 0;
+                const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                return this.getLinkEndY(toNode, d) - Math.cos(angle) * offset;
+            })
+            .style('pointer-events', 'none'); // Disable pointer events on visible lines
+
+        // Attach event handlers to hit areas (they will control both hit area and visible link)
+        this.hitAreas
+            .on('mouseenter', (event, d) => {
+                const index = this.data.links.indexOf(d);
+                const visibleLink = this.svg.selectAll('.links line.link').filter((_, i) => i === index);
+                visibleLink.attr('stroke', '#0066cc').attr('stroke-width', 3);
                 d3.select('#arrowhead path').attr('fill', '#0066cc');
             })
-            .on('mouseleave', function () {
-                d3.select(this).attr('stroke', '#333').attr('stroke-width', 2);
+            .on('mouseleave', (event, d) => {
+                const index = this.data.links.indexOf(d);
+                const visibleLink = this.svg.selectAll('.links line.link').filter((_, i) => i === index);
+                visibleLink.attr('stroke', '#333').attr('stroke-width', 2);
                 d3.select('#arrowhead path').attr('fill', '#333');
             })
             .on('click', (event, d) => {
@@ -365,6 +417,7 @@ export class DiagramManager {
     }
 
     updateLinks() {
+        // Update visible links
         this.linkElements
             .attr('x1', (d, i) => {
                 const fromNode = this.data.nodes.find(n => n.node_name === d.from);
@@ -398,6 +451,43 @@ export class DiagramManager {
                 const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
                 return this.getLinkEndY(toNode, d) - Math.cos(angle) * offset;
             });
+
+        // Update invisible hit areas (keep in sync with visible links)
+        if (this.hitAreas) {
+            this.hitAreas
+                .attr('x1', (d, i) => {
+                    const fromNode = this.data.nodes.find(n => n.node_name === d.from);
+                    const toNode = this.data.nodes.find(n => n.node_name === d.to);
+                    if (!fromNode || !toNode) return 0;
+                    const offset = d.curve_offset || 0;
+                    const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                    return this.getLinkStartX(fromNode, d) + Math.sin(angle) * offset;
+                })
+                .attr('y1', (d, i) => {
+                    const fromNode = this.data.nodes.find(n => n.node_name === d.from);
+                    const toNode = this.data.nodes.find(n => n.node_name === d.to);
+                    if (!fromNode || !toNode) return 0;
+                    const offset = d.curve_offset || 0;
+                    const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                    return this.getLinkStartY(fromNode, d) - Math.cos(angle) * offset;
+                })
+                .attr('x2', (d, i) => {
+                    const fromNode = this.data.nodes.find(n => n.node_name === d.from);
+                    const toNode = this.data.nodes.find(n => n.node_name === d.to);
+                    if (!toNode || !fromNode) return 0;
+                    const offset = d.curve_offset || 0;
+                    const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                    return this.getLinkEndX(toNode, d) + Math.sin(angle) * offset;
+                })
+                .attr('y2', (d, i) => {
+                    const fromNode = this.data.nodes.find(n => n.node_name === d.from);
+                    const toNode = this.data.nodes.find(n => n.node_name === d.to);
+                    if (!toNode || !fromNode) return 0;
+                    const offset = d.curve_offset || 0;
+                    const angle = Math.atan2(toNode.y - fromNode.y, toNode.x - fromNode.x);
+                    return this.getLinkEndY(toNode, d) - Math.cos(angle) * offset;
+                });
+        }
     }
 
     async savePositions() {

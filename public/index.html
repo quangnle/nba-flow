@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/papaparse/5.4.1/papaparse.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -93,6 +94,52 @@
 
         #info-panel-resizer:active {
             background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%);
+        }
+
+        /* Markdown content styling */
+        .markdown-content p {
+            margin: 0 0 0.5em 0;
+        }
+
+        .markdown-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+            margin: 0.5em 0;
+            padding-left: 1.5em;
+        }
+
+        .markdown-content li {
+            margin: 0.25em 0;
+        }
+
+        .markdown-content strong {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .markdown-content code {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 0.15em 0.4em;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            color: #3b82f6;
+        }
+
+        .markdown-content a {
+            color: #3b82f6;
+            text-decoration: underline;
+        }
+
+        .markdown-content blockquote {
+            border-left: 3px solid #3b82f6;
+            padding-left: 1em;
+            margin: 0.5em 0;
+            color: #64748b;
+            font-style: italic;
         }
 
         #info-panel {

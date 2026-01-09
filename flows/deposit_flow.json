@@ -10,7 +10,8 @@
       "node_type": "address",
       "x": 100,
       "y": 300,
-      "addresses": []
+      "addresses": [],
+      "description": "End users who interact with the protocol. Users can deposit funds, withdraw, and claim rewards. They receive Tracker Tokens representing their share of the pool."
     },
     {
       "node_name": "Farm Contract",
@@ -26,7 +27,8 @@
           "address": "0xf4884A556bb766Fe78AB5A1f9C5A1Da3535C475D",
           "label": "Farm 2"
         }
-      ]
+      ],
+      "description": "Entry point for user interactions. Handles deposit (ETH/ERC-20), withdrawal, and reward claims. Routes funds to appropriate Strategy contracts and manages Tracker Token issuance."
     },
     {
       "node_name": "Strategy",
@@ -722,7 +724,8 @@
           "pool": "WBTC / WETH",
           "farm": "Farm 2"
         }
-      ]
+      ],
+      "description": "Core liquidity management contract. Manages a specific token pair (e.g., WBTC/WETH). Handles liquidity provision to Uniswap V3 pools, fee collection, and profit distribution."
     },
     {
       "node_name": "Pool",
@@ -765,7 +768,8 @@
           "token1": "USDC.e",
           "fee": "0.05%"
         }
-      ]
+      ],
+      "description": "Uniswap V3 liquidity pool where Strategy contracts provide liquidity. Trading fees are generated from swaps and accumulate in the position NFT."
     },
     {
       "node_name": "Zap",
@@ -783,7 +787,8 @@
           "label": "Zap 2",
           "farm": "Farm 2"
         }
-      ]
+      ],
+      "description": "Token swap helper contract. Swaps single token input into the correct token pair ratio needed for Uniswap V3 liquidity provision."
     },
     {
       "node_name": "Position Manager",
@@ -795,7 +800,8 @@
           "address": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
           "label": "NonfungiblePositionManager"
         }
-      ]
+      ],
+      "description": "Uniswap V3 NonfungiblePositionManager contract. Manages NFT positions representing liquidity in specific price ranges. Used to add/remove liquidity and collect fees."
     },
     {
       "node_name": "Tracker Token",
@@ -842,56 +848,64 @@
       "name": "User_Farm",
       "from": "User",
       "to": "Farm Contract",
-      "description": "[1] User calls Farm.deposit() or Farm.depositLiquidity() with tokens/ETH",
+      "description": "**[1]** User initiates deposit:\n- Calls `Farm.deposit()` (ETH) or `Farm.depositLiquidity()` (ERC-20)\n- ETH: automatically wrapped to WETH\n- ERC-20: requires `approve()` first\n- Amount validated against minimum thresholds",
+      "link_type": "function_call",
       "curve_offset": 0
     },
     {
       "name": "Farm_Strategy",
       "from": "Farm Contract",
       "to": "Strategy",
-      "description": "[2] Farm calls Strategy.depositLiquidity() forwarding tokens",
+      "description": "**[2]** Farm forwards deposit to Strategy:\n- Calls `Strategy.depositLiquidity(userAddress, tokenAddress, amount)`\n- Calculates user share: `user_share = (deposit × total_shares) / total_liquidity`\n- Tokens held in Strategy pending liquidity provision",
+      "link_type": "function_call",
       "curve_offset": 0
     },
     {
       "name": "Strategy_Zap",
       "from": "Strategy",
       "to": "Zap",
-      "description": "[3a] Strategy sends token to Zap for swap if needed to match pool ratio",
+      "description": "**[3a]** Token swap if needed:\n- Sends tokens to Zap contract for swapping\n- Uses on-chain DEX routes (Uniswap, Camelot)\n- Converts to correct token0/token1 ratio\n- Ensures optimal liquidity provision",
+      "link_type": "token_transfer",
       "curve_offset": 20
     },
     {
       "name": "Zap_Strategy",
       "from": "Zap",
       "to": "Strategy",
-      "description": "[3b] Zap returns swapped token back to Strategy",
+      "description": "**[3b]** Zap returns balanced tokens:\n- Returns token pair to Strategy\n- Tokens now in correct ratio (e.g., 50% WBTC / 50% WETH)\n- Ready for adding to Uniswap V3 position",
+      "link_type": "token_transfer",
       "curve_offset": 30
     },
     {
       "name": "Strategy_PositionManager",
       "from": "Strategy",
       "to": "Position Manager",
-      "description": "[4] Strategy calls PositionManager.increaseLiquidity() to add tokens to NFT position",
+      "description": "**[4]** Add liquidity to position:\n- Calls `increaseLiquidity(tokenId, amount0, amount1, ...)`\n- Adds tokens to existing NFT position\n- If no position: `mint()` creates new one",
+      "link_type": "function_call",
       "curve_offset": 0
     },
     {
       "name": "PositionManager_Pool",
       "from": "Position Manager",
       "to": "Pool",
-      "description": "[5] PositionManager adds liquidity to Uniswap V3 Pool",
+      "description": "**[5]** Liquidity added to Pool:\n- Transfers token0 + token1 to Uniswap V3 Pool\n- Updates position's liquidity\n- Starts earning trading fees within price range",
+      "link_type": "liquidity_add",
       "curve_offset": 0
     },
     {
       "name": "Strategy_TrackerToken",
       "from": "Strategy",
       "to": "Tracker Token",
-      "description": "[6] Strategy calls ITrackerToken(_trackerTokenAddress).mint(userAddress, userShares)",
+      "description": "**[6]** Mint Tracker Token:\n- Calls `ITrackerToken.mint(userAddress, userShares)`\n- ERC-20 representing ownership proportion\n- Required for withdrawals and reward claims",
+      "link_type": "token_mint",
       "curve_offset": 0
     },
     {
       "name": "TrackerToken_User",
       "from": "Tracker Token",
       "to": "User",
-      "description": "[7] Tracker Token minted to User wallet as proof of deposit share",
+      "description": "**[7]** Token sent to User:\n- Tracker Token minted to User's wallet\n- Proof of deposit share\n- Check balance: `balanceOf(userAddress)`",
+      "link_type": "token_transfer",
       "curve_offset": 0
     }
   ]

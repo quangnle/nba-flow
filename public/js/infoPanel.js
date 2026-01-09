@@ -843,6 +843,16 @@ export class InfoPanel {
             </div>
         `;
 
+        // Show description if available (with markdown support)
+        if (node.description) {
+            const renderedDescription = typeof marked !== 'undefined' ? marked.parse(node.description) : node.description;
+            html += `
+                <div class="node-description mb-4 p-3 bg-blue-50 border-l-4 border-blue-500 text-sm text-gray-700 rounded-r">
+                    <div class="markdown-content">${renderedDescription}</div>
+                </div>
+            `;
+        }
+
         if (node.addresses && node.addresses.length > 0) {
             html += `
                 <div class="stats-bar">
@@ -1492,41 +1502,107 @@ export class InfoPanel {
     }
 
     renderLinkView(link) {
+        // Parse description to extract step number if present (e.g., "[1] Some text")
+        const stepMatch = link.description ? link.description.match(/^\[(\d+[a-z]?)\]\s*/) : null;
+        const stepNumber = stepMatch ? stepMatch[1] : null;
+        const descriptionText = stepMatch ? link.description.replace(stepMatch[0], '') : (link.description || 'No description provided');
+
+        // Determine link type badge
+        const linkTypeBadge = link.link_type
+            ? `<span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-medium">${link.link_type}</span>`
+            : '';
+
+        // Determine line style badge  
+        const lineStyleBadge = link.line_style
+            ? `<span class="px-2 py-1 text-xs rounded-full bg-purple-100 text-purple-700 font-medium">${link.line_style}</span>`
+            : '';
+
         return `
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-4">
-                    <h3 class="text-xl font-bold text-gray-900">${link.name}</h3>
+                    <h3 class="text-xl font-bold text-gray-900">${link.name || 'Connection'}</h3>
+                    ${stepNumber ? `<span class="px-3 py-1 text-sm rounded-full bg-green-100 text-green-700 font-bold">Step ${stepNumber}</span>` : ''}
                 </div>
+                
+                ${linkTypeBadge || lineStyleBadge ? `
+                <div class="flex gap-2 mb-4">
+                    ${linkTypeBadge}
+                    ${lineStyleBadge}
+                </div>
+                ` : ''}
                 
                 <div class="info-card">
                     <div class="info-card-body p-6">
+                        <!-- Visual Connection Display -->
                         <div class="flex items-center justify-center gap-4 mb-6">
                             <div class="text-center">
-                                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold mb-2">
+                                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white font-bold mb-2 shadow-lg">
                                     ${link.from.charAt(0)}
                                 </div>
                                 <span class="text-sm font-medium text-gray-700">${link.from}</span>
                             </div>
                             
-                            <div class="link-arrow">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                                </svg>
+                            <div class="link-arrow flex flex-col items-center">
+                                <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded relative">
+                                    <div class="absolute -right-1 top-1/2 transform -translate-y-1/2">
+                                        <svg class="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                                        </svg>
+                                    </div>
+                                </div>
                             </div>
                             
                             <div class="text-center">
-                                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white font-bold mb-2">
+                                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center text-white font-bold mb-2 shadow-lg">
                                     ${link.to.charAt(0)}
                                 </div>
                                 <span class="text-sm font-medium text-gray-700">${link.to}</span>
                             </div>
                         </div>
                         
-                        <div class="border-t border-gray-100 pt-4">
-                            <div class="meta-item">
-                                <span class="meta-label">Description</span>
-                                <span class="meta-value text-gray-600">${link.description || 'No description provided'}</span>
+                        <!-- Description Section - More Prominent (with markdown support) -->
+                        <div class="link-description mb-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 rounded-r">
+                            <div class="flex items-start gap-3">
+                                <svg class="w-5 h-5 text-blue-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div class="flex-1">
+                                    <h4 class="font-semibold text-gray-800 mb-1">Description</h4>
+                                    <div class="markdown-content text-gray-700 leading-relaxed">${typeof marked !== 'undefined' ? marked.parse(descriptionText) : descriptionText}</div>
+                                </div>
                             </div>
+                        </div>
+                        
+                        <!-- Connection Details - Redesigned -->
+                        <div class="mt-4 p-4 bg-gradient-to-br from-slate-50 to-gray-100 rounded-xl border border-gray-200">
+                            <div class="flex items-center gap-2 mb-3">
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path>
+                                </svg>
+                                <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Connection Details</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-white rounded-lg p-3 border border-blue-100 shadow-sm">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                                        <span class="text-xs font-medium text-gray-400 uppercase">From</span>
+                                    </div>
+                                    <span class="text-sm font-semibold text-blue-600">${link.from}</span>
+                                </div>
+                                <div class="bg-white rounded-lg p-3 border border-purple-100 shadow-sm">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <div class="w-2 h-2 rounded-full bg-purple-500"></div>
+                                        <span class="text-xs font-medium text-gray-400 uppercase">To</span>
+                                    </div>
+                                    <span class="text-sm font-semibold text-purple-600">${link.to}</span>
+                                </div>
+                            </div>
+                            ${link.link_type ? `
+                            <div class="mt-3 flex items-center gap-2">
+                                <span class="text-xs text-gray-400">Type:</span>
+                                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-medium">${link.link_type}</span>
+                            </div>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
