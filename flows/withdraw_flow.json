@@ -9,15 +9,15 @@
       "node_name": "User",
       "node_type": "address",
       "x": 100,
-      "y": 300,
+      "y": 400,
       "addresses": [],
       "description": "End users who interact with the protocol. Users can deposit funds, withdraw, and claim rewards. They receive Tracker Tokens representing their share of the pool."
     },
     {
       "node_name": "Farm Contract",
       "node_type": "contract",
-      "x": 350,
-      "y": 200,
+      "x": 300,
+      "y": 150,
       "addresses": [
         {
           "address": "0xD948db304F93d28B58d2CFb1dAA4Eafd193C6436",
@@ -33,8 +33,8 @@
     {
       "node_name": "Strategy",
       "node_type": "contract",
-      "x": 600,
-      "y": 300,
+      "x": 550,
+      "y": 150,
       "addresses": [
         {
           "address": "0x272F5419512eEA13c41eA0277503Ba8aC97B2074",
@@ -730,8 +730,8 @@
     {
       "node_name": "Position Manager",
       "node_type": "contract",
-      "x": 850,
-      "y": 300,
+      "x": 800,
+      "y": 150,
       "addresses": [
         {
           "address": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
@@ -743,8 +743,8 @@
     {
       "node_name": "Pool",
       "node_type": "address",
-      "x": 1100,
-      "y": 300,
+      "x": 1000,
+      "y": 400,
       "addresses": [
         {
           "address": "0x2f5e87c9312fa29aed5c179e456625d79015299c",
@@ -787,8 +787,8 @@
     {
       "node_name": "Tracker Token",
       "node_type": "token",
-      "x": 350,
-      "y": 500,
+      "x": 550,
+      "y": 50,
       "addresses": [
         {
           "address": "0x701a18468d076c57d398916b1a5fabd26d6fc609",
@@ -829,43 +829,43 @@
       "name": "User_Farm",
       "from": "User",
       "to": "Farm Contract",
-      "description": "**[1]** User initiates deposit:\n- Calls `Farm.deposit()` (ETH) or `Farm.depositLiquidity()` (ERC-20)\n- ETH: automatically wrapped to WETH\n- ERC-20: requires `approve()` first\n- Amount validated against minimum thresholds",
+      "description": "**[1]** User calls withdraw():\n- Calls `Farm.withdrawLiquidity(amount)`\n- **Requirement**: User must `approve()` Farm/Strategy to spend Tracker Token",
       "link_type": "function_call"
     },
     {
       "name": "Farm_Strategy",
       "from": "Farm Contract",
       "to": "Strategy",
-      "description": "**[2]** Farm forwards deposit to Strategy:\n- Calls `Strategy.depositLiquidity(userAddress, tokenAddress, amount)`\n- Calculates user share: `user_share = (deposit × total_shares) / total_liquidity`\n- Tokens held in Strategy pending liquidity provision",
+      "description": "**[2]** Farm delegates to Strategy:\n- Calls `Strategy.withdrawLiquidity(user, amount)`\n- **Check**: `require(amount <= _userShare[user])`\n- Validates user has sufficient shares",
       "link_type": "function_call"
+    },
+    {
+      "name": "Strategy_TrackerToken",
+      "from": "Strategy",
+      "to": "Tracker Token",
+      "description": "**[3]** Pull Tracker Token:\n- Calls `trackerToken.transferFrom(user, strategy, amount)`\n- Removes **proof of position** from User\n- **Accounting**: `_userShare[user] -= amount` (Internal Burn)",
+      "link_type": "token_transfer"
     },
     {
       "name": "Strategy_PositionManager",
       "from": "Strategy",
       "to": "Position Manager",
-      "description": "**[4]** Add liquidity to position:\n- Calls `increaseLiquidity(tokenId, amount0, amount1, ...)`\n- Adds tokens to existing NFT position\n- If no position: `mint()` creates new one",
+      "description": "**[4]** Remove Liquidity & Collect:\n- Calls `decreaseLiquidity()` to burn position\n- Calls `collect(recipient=User)` to retrieve tokens",
       "link_type": "function_call"
     },
     {
       "name": "PositionManager_Pool",
       "from": "Position Manager",
       "to": "Pool",
-      "description": "**[5]** Liquidity added to Pool:\n- Transfers token0 + token1 to Uniswap V3 Pool\n- Updates position's liquidity\n- Starts earning trading fees within price range",
-      "link_type": "liquidity_remove"
+      "description": "**[5]** Update Pool:\n- Burns liquidity shares in Pool\n- Releases underlying tokens for collection",
+      "link_type": "function_call"
     },
     {
-      "name": "Strategy_User",
-      "from": "Strategy",
+      "name": "Pool_User",
+      "from": "Pool",
       "to": "User",
-      "description": "**[5]** Tokens sent to User:\n- Transfers token0 + token1 to User's wallet\n- Uses ERC-20 `transfer(userAddress, amount)`\n- User receives proportional share",
+      "description": "**[6]** Transfer Assets:\n- Pool transfers tokens (WBTC + WETH) directly to User\n- Triggered by Position Manager's `collect` call\n- Emits `Withdraw` event",
       "link_type": "token_transfer"
-    },
-    {
-      "name": "TrackerToken_Farm",
-      "from": "Tracker Token",
-      "to": "Farm Contract",
-      "description": "**[Burn]** Tracker Token burned:\n- `TrackerToken.burnFrom(userAddress, shares)`\n- Permanently destroys redeemed shares\n- Updates total supply",
-      "link_type": "token_burn"
     }
   ]
 }

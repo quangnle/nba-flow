@@ -794,22 +794,43 @@
       "name": "Controller_Strategy",
       "from": "Controller",
       "to": "Strategy",
-      "description": "**[1]** Controller triggers rescale:\n- Calls `Strategy.rescale(newTickLower, newTickUpper)`\n- Repositions liquidity to new price range\n- Done when price moves outside active range",
+      "description": "**[1]** Trigger Rescale:\n- `Strategy.rescale(newTickLower, newTickUpper)`\n- Checks if current price is outside `tickLower` or `tickUpper`\n- Initiates position readjustment",
       "link_type": "function_call"
     },
     {
-      "name": "Strategy_PositionManager",
+      "name": "Strategy_PositionManager_Collect",
       "from": "Strategy",
       "to": "Position Manager",
-      "description": "**[4]** Add liquidity to position:\n- Calls `increaseLiquidity(tokenId, amount0, amount1, ...)`\n- Adds tokens to existing NFT position\n- If no position: `mint()` creates new one",
+      "description": "**[2]** Harvest Pending Fees:\n- `_collectFromPosition`\n- Harvests uncollected trading fees from the old position before modifying it",
       "link_type": "function_call"
     },
     {
-      "name": "Strategy_Pool",
-      "from": "Strategy",
+      "name": "PositionManager_Pool_Withdraw",
+      "from": "Position Manager",
       "to": "Pool",
-      "description": "**[3]** Add to new position:\n- `increaseLiquidity()` deposits tokens\n- New range: newTickLower to newTickUpper\n- Active when currentTick within range",
-      "link_type": "liquidity_add"
+      "description": "**[3]** Remove Liquidity:\n- `decreaseLiquidity(liquidity)`\n- Withdraws 100% of liquidity from the **Old Tick Range**\n- Prepares tokens for re-deployment",
+      "link_type": "function_call"
+    },
+    {
+      "name": "Pool_Strategy_Tokens",
+      "from": "Pool",
+      "to": "Strategy",
+      "description": "**[4]** Receive Principal & Fees:\n- Pool transfers `token0`, `token1` to Strategy\n- Strategy updates `_dustTokenAmount` (temporary storage for re-minting)",
+      "link_type": "token_transfer"
+    },
+    {
+      "name": "Strategy_PositionManager_BurnMint",
+      "from": "Strategy",
+      "to": "Position Manager",
+      "description": "**[5]** Burn & Mint New:\n- `burn(oldTokenId)`: Destroys old NFT\n- `mint(newTickLower, newTickUpper)`: Creates **New Position** using `_dustTokenAmount`",
+      "link_type": "function_call"
+    },
+    {
+      "name": "PositionManager_Pool_Add",
+      "from": "Position Manager",
+      "to": "Pool",
+      "description": "**[6]** Add Liquidity:\n- Deposits tokens into the **New Tick Range**\n- Updates `_liquidityNftId` with the new tokenId",
+      "link_type": "function_call"
     }
   ]
 }

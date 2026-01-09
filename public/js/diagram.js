@@ -664,6 +664,24 @@ export class DiagramManager {
                     border-top: 1px solid rgba(255,255,255,0.1);
                     padding-top: 12px;
                 }
+                #step-overlay .step-description p {
+                    margin: 0 0 8px 0;
+                }
+                #step-overlay .step-description p:last-child {
+                    margin-bottom: 0;
+                }
+                #step-overlay .step-description code {
+                    background: rgba(0, 212, 170, 0.1);
+                    color: #00D4AA;
+                    padding: 2px 4px;
+                    border-radius: 4px;
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 0.9em;
+                }
+                #step-overlay .step-description strong {
+                    color: white;
+                    font-weight: 600;
+                }
                 #step-overlay.animating .step-header span {
                     animation: pulse 1s ease-in-out infinite;
                 }
@@ -675,7 +693,7 @@ export class DiagramManager {
     }
 
     // Update the step overlay with current step info
-    updateStepOverlay(from, to, currentStep, totalSteps) {
+    updateStepOverlay(from, to, description, currentStep, totalSteps) {
         const stepCurrentEl = document.getElementById('step-current');
         const stepTotalEl = document.getElementById('step-total');
         const stepFromEl = document.getElementById('step-from');
@@ -687,7 +705,21 @@ export class DiagramManager {
         if (stepTotalEl) stepTotalEl.textContent = totalSteps;
         if (stepFromEl) stepFromEl.textContent = from;
         if (stepToEl) stepToEl.textContent = to;
-        if (stepDescEl) stepDescEl.textContent = this.getSimpleDescription(from, to);
+
+        if (stepDescEl) {
+            // Use provided formatted description or fallback to simple mapping
+            let rawDesc = description || this.getSimpleDescription(from, to);
+            // Remove step number prefix like "[1] " for cleaner display
+            rawDesc = rawDesc.replace(/^\[\d+[a-z]?\]\s*/, '');
+
+            // Render markdown if available
+            if (typeof marked !== 'undefined' && marked.parse) {
+                stepDescEl.innerHTML = marked.parse(rawDesc);
+            } else {
+                stepDescEl.textContent = rawDesc;
+            }
+        }
+
         if (overlay) overlay.classList.add('animating');
     }
 
@@ -784,8 +816,8 @@ export class DiagramManager {
         const { link, index } = linksWithOrder[currentStep];
         const linkLine = this.svg.selectAll('.links line').filter((d, i) => i === index);
 
-        // Update step overlay with from/to node names
-        this.updateStepOverlay(link.from, link.to, currentStep, linksWithOrder.length);
+        // Update step overlay with from/to node names and description
+        this.updateStepOverlay(link.from, link.to, link.description, currentStep, linksWithOrder.length);
 
         // Get line length for stroke-dasharray animation
         const lineNode = linkLine.node();

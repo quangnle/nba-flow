@@ -802,12 +802,12 @@
         {
           "address": "0x1a67e36f468fc3fea4aeb0a7a46ba01ab2fc09cd",
           "label": "SDB1",
-          "description": "Success-based Distribution Bucket 1"
+          "description": "Success-based Distribution Bucket"
         },
         {
           "address": "0xe19c9945d9d613ed39772538e9beca1ad409d471",
           "label": "SDB2",
-          "description": "Success-based Distribution Bucket 2"
+          "description": "Success-based Distribution Bucket"
         }
       ]
     },
@@ -918,12 +918,12 @@
         {
           "address": "0x99a373a3f236c9682fc6efc20171c315a8c16611",
           "label": "DoIt1",
-          "description": "Operational Address 1"
+          "description": "Operational Address"
         },
         {
           "address": "0x66cf30483b6c27dfeec89ae22f44bda973c625cb",
           "label": "DoIt2",
-          "description": "Operational Address 2"
+          "description": "Operational Address"
         }
       ]
     },
@@ -1024,7 +1024,7 @@
       "name": "FeeCollector_SDB",
       "from": "FeeCollector",
       "to": "SDB",
-      "description": "**[ALLOCATE 27.4%]** SDB distribution:\n- SDB1: 13.7% → `0x1A67E3...`\n- SDB2: 13.7% → `0xE19c99...`\n- Success-based distribution"
+      "description": "**[ALLOCATE SHARE]** SDB distribution:\n- SDB1 & SDB2 recipients\n- Success-based distribution"
     },
     {
       "name": "SDB_User",
@@ -1036,7 +1036,7 @@
       "name": "FeeCollector_DoIt",
       "from": "FeeCollector",
       "to": "DoIt",
-      "description": "**[ALLOCATE 13.2%]** DoIt distribution:\n- DoIt1: 6.6% → `0x99A373...`\n- DoIt2: 6.6% → `0x66cF30...`\n- Operational & development"
+      "description": "**[ALLOCATE SHARE]** DoIt distribution:\n- DoIt1 & DoIt2 recipients\n- Operational & development"
     },
     {
       "name": "DoIt_User",
@@ -1048,7 +1048,7 @@
       "name": "FeeCollector_NBA",
       "from": "FeeCollector",
       "to": "NBA success fee",
-      "description": "**[ALLOCATE 26.4%]** NBA fee distribution:\n- Address: `0xd0788b...`\n- Performance-based allocation\n- Rewards successful yield"
+      "description": "**[ALLOCATE SHARE]** NBA fee distribution:\n- Performance-based allocation\n- Rewards successful yield"
     },
     {
       "name": "NBA_User",
@@ -1060,13 +1060,13 @@
       "name": "FeeCollector_X",
       "from": "FeeCollector",
       "to": "X",
-      "description": "**[ALLOCATE 33%]** Primary recipient:\n- Address: `0x69F3BA...`\n- Largest single allocation\n- Primary stakeholder share"
+      "description": "**[ALLOCATE SHARE]** Primary recipient:\n- Largest single allocation\n- Primary stakeholder share"
     },
     {
       "name": "X_User",
       "from": "X",
       "to": "User",
-      "description": "**[X → END USER]** Primary payout:\n- X holds 33% WBTC\n- Distributed to stakeholders"
+      "description": "**[X → END USER]** Primary payout:\n- X holds allocated share\n- Distributed to stakeholders"
     },
     {
       "name": "Strategies_User",

@@ -857,15 +857,15 @@
         {
           "address": "0x99a373a3f236c9682fc6efc20171c315a8c16611",
           "label": "DoIt1",
-          "description": "Operational Address 1"
+          "description": "Operational Address"
         },
         {
           "address": "0x66cf30483b6c27dfeec89ae22f44bda973c625cb",
           "label": "DoIt2",
-          "description": "Operational Address 2"
+          "description": "Operational Address"
         }
       ],
-      "description": "Operational fee addresses receiving 13.2% of collected fees (split 6.6% each). Used for protocol operations, maintenance, and development costs."
+      "description": "Operational fee addresses receiving a portion of collected fees. Used for protocol operations, maintenance, and development costs."
     },
     {
       "node_name": "NBA success fee",
@@ -879,7 +879,7 @@
           "description": "Performance Fee Collection Address"
         }
       ],
-      "description": "Performance fee collection address receiving 26.4% of collected fees. This rewards successful yield generation and incentivizes protocol performance."
+      "description": "Performance fee collection address receiving a portion of collected fees. This rewards successful yield generation and incentivizes protocol performance."
     },
     {
       "node_name": "X",
@@ -920,7 +920,7 @@
           "type": "Fee Address"
         }
       ],
-      "description": "Primary fee recipient addresses receiving 33% of collected fees (largest allocation). Multiple addresses for distribution and operational flexibility."
+      "description": "Primary fee recipient addresses receiving a portion of collected fees. Multiple addresses for distribution and operational flexibility."
     },
     {
       "node_name": "SDB",
@@ -931,15 +931,15 @@
         {
           "address": "0x1a67e36f468fc3fea4aeb0a7a46ba01ab2fc09cd",
           "label": "SDB1",
-          "description": "Success-based Distribution Bucket 1"
+          "description": "Success-based Distribution Bucket"
         },
         {
           "address": "0xe19c9945d9d613ed39772538e9beca1ad409d471",
           "label": "SDB2",
-          "description": "Success-based Distribution Bucket 2"
+          "description": "Success-based Distribution Bucket"
         }
       ],
-      "description": "Success-based Distribution Buckets. Receives 27.4% of collected fees (split 13.7% each). These funds are allocated to users based on their performance/success metrics."
+      "description": "Success-based Distribution Buckets. Receives a portion of collected fees. These funds are allocated to users based on their performance/success metrics."
     }
   ],
   "links": [
@@ -947,7 +947,7 @@
       "name": "Controller_Strategy",
       "from": "Controller",
       "to": "Strategy",
-      "description": "**[1]** Controller triggers earnPrepare:\n- Calls `Strategy.earnPreparation()`\n- Converts fees (token0 + token1) to WBTC\n- Only authorized Controller addresses",
+      "description": "**[1]** Trigger earnPrepare:\n- `Strategy.earnPreparation()`\n- Controller initiates process\n- Starts fee conversion flow",
       "link_type": "function_call"
     },
     {
@@ -955,7 +955,7 @@
       "from": "Strategy",
       "to": "Zap",
       "curve_offset": 10,
-      "description": "**[3a]** Token swap if needed:\n- Sends tokens to Zap contract for swapping\n- Uses on-chain DEX routes (Uniswap, Camelot)\n- Converts to correct token0/token1 ratio\n- Ensures optimal liquidity provision",
+      "description": "**[2a]** Swap Fees:\n- Sends token0/token1 fees to Zap\n- **Goal**: Swap to **WBTC**\n- Cleaning up accrued fees",
       "link_type": "token_transfer"
     },
     {
@@ -963,42 +963,42 @@
       "from": "Zap",
       "to": "Strategy",
       "curve_offset": 20,
-      "description": "**[3b]** Zap returns balanced tokens:\n- Returns token pair to Strategy\n- Tokens now in correct ratio (e.g., 50% WBTC / 50% WETH)\n- Ready for adding to Uniswap V3 position",
+      "description": "**[2b]** Return Reward Token:\n- Zap returns **WBTC** to Strategy\n- Funds ready for distribution\n- No liquidity addition",
       "link_type": "token_transfer"
     },
     {
       "name": "Strategy_FeeCollector",
       "from": "Strategy",
       "to": "Fee collector",
-      "description": "**[4]** Management fee to FeeCollector:\n- `WBTC.transfer(feeCollectorAddress, feeAmount)`\n- Fee: typically 20-30% of profits\n- Remaining stays in Strategy",
+      "description": "**[3]** Distribute to Managers:\n- Transfers WBTC to Fund Managers\n- 3 configured recipients\n- Completes preparation",
       "link_type": "token_transfer"
     },
     {
       "name": "FeeCollector_DoIt",
       "from": "Fee collector",
       "to": "DoIt",
-      "description": "**[5a]** DoIt allocation (13.2%):\n- DoIt1: 6.6% → `0x99A373...`\n- DoIt2: 6.6% → `0x66cF30...`\n- Covers operations & development",
+      "description": "**[4a]** DoIt Allocation:\n- Ops & Dev fund\n- Split between operational addresses\n- Covers maintenance costs",
       "link_type": "token_transfer"
     },
     {
       "name": "FeeCollector_SDB",
       "from": "Fee collector",
       "to": "SDB",
-      "description": "**[5b]** SDB allocation (27.4%):\n- SDB1: 13.7% → `0x1A67E3...`\n- SDB2: 13.7% → `0xE19c99...`\n- Success-based distribution",
+      "description": "**[4b]** SDB Allocation:\n- Success-based distribution\n- Split between SDB buckets\n- Performance incentives",
       "link_type": "token_transfer"
     },
     {
       "name": "FeeCollector_NBASuccessFee",
       "from": "Fee collector",
       "to": "NBA success fee",
-      "description": "**[5c]** NBA Success Fee (26.4%):\n- Address: `0xd0788b16...`\n- Performance-based allocation\n- Rewards successful yield generation",
+      "description": "**[4c]** NBA Success Fee:\n- Performance reward\n- Allocated to Success Fee address\n- Incentivizes yield",
       "link_type": "token_transfer"
     },
     {
       "name": "FeeCollector_X",
       "from": "Fee collector",
       "to": "X",
-      "description": "**[5d]** Primary recipient (33%):\n- Largest single allocation\n- Multiple X addresses\n- Primary stakeholder share",
+      "description": "**[4d]** Primary Allocation:\n- Main stakeholder share\n- Allocated to X addresses\n- Primary distribution",
       "link_type": "token_transfer"
     }
   ]

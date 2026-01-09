@@ -794,28 +794,28 @@
       "name": "Controller_Strategy",
       "from": "Controller",
       "to": "Strategy",
-      "description": "**[1]** Controller triggers collection:\n- Calls `Strategy.collectRewards()`\n- Only authorized Controller addresses\n- Scheduled recurring operation",
+      "description": "**[1]** Trigger Collection:\n- `Strategy.collectRewards()`\n- Controller initiates harvest\n- Scheduled periodic action",
       "link_type": "function_call"
     },
     {
       "name": "Strategy_PositionManager",
       "from": "Strategy",
       "to": "Position Manager",
-      "description": "**[4]** Add liquidity to position:\n- Calls `increaseLiquidity(tokenId, amount0, amount1, ...)`\n- Adds tokens to existing NFT position\n- If no position: `mint()` creates new one",
+      "description": "**[2]** Call Collect:\n- `PositionManager.collect(params)`\n- Requests accrued fees (token0, token1)\n- Fees sent back to **Strategy Contract**",
       "link_type": "function_call"
     },
     {
       "name": "PositionManager_Pool",
       "from": "Position Manager",
       "to": "Pool",
-      "description": "**[5]** Liquidity added to Pool:\n- Transfers token0 + token1 to Uniswap V3 Pool\n- Updates position's liquidity\n- Starts earning trading fees within price range",
+      "description": "**[3]** Harvest Fees:\n- Interaction with Uniswap V3 Pool\n- Withdraws accumulated trading fees\n- Updates position state",
       "link_type": "function_call"
     },
     {
       "name": "Pool_Strategy",
       "from": "Pool",
       "to": "Strategy",
-      "description": "**[4]** Fees transferred to Strategy:\n- Pool → Position Manager → Strategy\n- Stored in `_rewardToken0Amount`, `_rewardToken1Amount`\n- Processed during `earnPrepare()`",
+      "description": "**[4]** Receive Fees:\n- Pool transfers fees to Strategy\n- Tokens: `token0` + `token1`\n- Strategy updates internal fee accounting",
       "link_type": "token_transfer"
     }
   ]

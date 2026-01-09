@@ -9,15 +9,15 @@
       "node_name": "User",
       "node_type": "address",
       "x": 100,
-      "y": 300,
+      "y": 400,
       "addresses": [],
       "description": "End users who interact with the protocol. Users can deposit funds, withdraw, and claim rewards. They receive Tracker Tokens representing their share of the pool."
     },
     {
       "node_name": "Farm Contract",
       "node_type": "contract",
-      "x": 350,
-      "y": 300,
+      "x": 300,
+      "y": 150,
       "addresses": [
         {
           "address": "0xD948db304F93d28B58d2CFb1dAA4Eafd193C6436",
@@ -33,8 +33,8 @@
     {
       "node_name": "Strategy",
       "node_type": "contract",
-      "x": 600,
-      "y": 300,
+      "x": 550,
+      "y": 150,
       "addresses": [
         {
           "address": "0x272F5419512eEA13c41eA0277503Ba8aC97B2074",
@@ -730,8 +730,8 @@
     {
       "node_name": "Pool",
       "node_type": "address",
-      "x": 1100,
-      "y": 300,
+      "x": 1000,
+      "y": 400,
       "addresses": [
         {
           "address": "0x2f5e87c9312fa29aed5c179e456625d79015299c",
@@ -774,8 +774,8 @@
     {
       "node_name": "Zap",
       "node_type": "contract",
-      "x": 600,
-      "y": 150,
+      "x": 550,
+      "y": 50,
       "addresses": [
         {
           "address": "0xaf5e2b036784c758ee6dd655abd83259a0524f4a",
@@ -793,8 +793,8 @@
     {
       "node_name": "Position Manager",
       "node_type": "contract",
-      "x": 850,
-      "y": 300,
+      "x": 800,
+      "y": 150,
       "addresses": [
         {
           "address": "0xC36442b4a4522E871399CD717aBDD847Ab11FE88",
@@ -806,8 +806,8 @@
     {
       "node_name": "Tracker Token",
       "node_type": "token",
-      "x": 350,
-      "y": 500,
+      "x": 300,
+      "y": 50,
       "description": "ERC-20 token representing user's share. Minted on deposit, burned on withdraw.",
       "addresses": [
         {
@@ -856,7 +856,7 @@
       "name": "Farm_Strategy",
       "from": "Farm Contract",
       "to": "Strategy",
-      "description": "**[2]** Farm forwards deposit to Strategy:\n- Calls `Strategy.depositLiquidity(userAddress, tokenAddress, amount)`\n- Calculates user share: `user_share = (deposit × total_shares) / total_liquidity`\n- Tokens held in Strategy pending liquidity provision",
+      "description": "**[2]** Farm forwards deposit to Strategy:\n- Calls `Strategy.depositLiquidity`\n- Calculates share: `(liquidity_added × total_shares) / old_total_liquidity`\n- Uses `liquidity_added` returned from Position Manager",
       "link_type": "function_call",
       "curve_offset": 0
     },
@@ -880,7 +880,7 @@
       "name": "Strategy_PositionManager",
       "from": "Strategy",
       "to": "Position Manager",
-      "description": "**[4]** Add liquidity to position:\n- Calls `increaseLiquidity(tokenId, amount0, amount1, ...)`\n- Adds tokens to existing NFT position\n- If no position: `mint()` creates new one",
+      "description": "**[4]** Add liquidity to position:\n- Calls `increaseLiquidity(tokenId, amount0, amount1, ...)`\n- Adds tokens to the Strategy's existing NFT position\n- Increases the managed liquidity share",
       "link_type": "function_call",
       "curve_offset": 0
     },
